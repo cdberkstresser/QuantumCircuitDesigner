@@ -1,8 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -11,7 +14,10 @@ import java.util.stream.Collectors;
  * @author cdberkstresser
  *
  */
-public class QuantumCircuit {
+public class QuantumCircuit implements Serializable {
+	/** Generated Serializable ID. */
+	private static final long serialVersionUID = 8646269267743668885L;
+
 	/**
 	 * Multiply two complex gates.
 	 * 
@@ -29,18 +35,6 @@ public class QuantumCircuit {
 				}
 				result[answerRow][answerColumn] = sum;
 			}
-		}
-		return result;
-	}
-
-	/**
-	 * @param states The states on which to conduct the tensor product.
-	 * @return The tensor product of the states.
-	 */
-	public static Complex[][] tensor(final Complex[][]... states) {
-		Complex[][] result = states[0];
-		for (int n = 1; n < states.length; ++n) {
-			result = tensor(result, states[n]);
 		}
 		return result;
 	}
@@ -73,6 +67,8 @@ public class QuantumCircuit {
 	/** The list of quantum wires associated with this circuit. */
 	private List<QuantumWire> wires = new ArrayList<>();
 
+	private Map<Integer, List<Complex>> stateTransposeCache = new HashMap<>();
+
 	/**
 	 * Adds a wire to the circuit.
 	 * 
@@ -80,6 +76,7 @@ public class QuantumCircuit {
 	 */
 	public void addWire(final QuantumWire wire) {
 		wires.add(wire);
+		stateTransposeCache.clear();
 	}
 
 	/**
@@ -116,101 +113,6 @@ public class QuantumCircuit {
 	/**
 	 * @param afterIndex The index position of the state to get. Calculates the
 	 *                   state after all gates at that index position have ran.
-	 * @return The state of the circuit at any index position.
-	 */
-	public Complex[][] getState(final int afterIndex) {
-		Complex[][] gateMatrix = { { new Complex(1) } };
-		if (afterIndex == 0) {
-			for (int n = 0; n < wires.size(); ++n) {
-				gateMatrix = tensor(gateMatrix, wires.get(n).getInitialValue().getState());
-			}
-			return gateMatrix;
-		} else {
-			for (int n = 0; n < wires.size();) {
-				final int wirePosition = n;
-				List<QuantumGate> thisStateGate = gates.stream().filter(x -> x.getGatePosition() == afterIndex - 1)
-						.filter(x -> x.getWires().contains(wirePosition)).collect(Collectors.toList());
-				if (thisStateGate.size() > 0) {
-					gateMatrix = tensor(gateMatrix, thisStateGate.get(0).getGateMatrix());
-					n += Math.round(Math.log(thisStateGate.get(0).getGateMatrix().length) / Math.log(2));
-				} else {
-					gateMatrix = tensor(gateMatrix, QuantumGate.getIdentityMatrix());
-					n++;
-				}
-				// if (wires.get(n).getGate(afterIndex - 1).getGateType() == GateType.CNOT) {
-				// n++;
-				// }
-			}
-			return multiply(gateMatrix, getState(afterIndex - 1));
-		}
-	}
-
-	/**
-	 * @param afterIndex The index position of the state to get. Calculates the
-	 *                   state after all gates at that index position have ran.
-	 * @return A string representation of the circuit kets.
-	 */
-	public String getStateKets(final int afterIndex) {
-		StringBuilder sb = new StringBuilder();
-		Complex[][] state = getState(afterIndex);
-		for (int n = 0; n < state.length; ++n) {
-			if (!state[n][0].equals(new Complex(0.0))) {
-				sb.append(state[n][0] + " |" + pad(Integer.toBinaryString(n), wires.size()) + ">" + " + ");
-			}
-		}
-		return sb.toString().replaceAll(" \\+ $", "");
-	}
-
-	/**
-	 * @return The list of wires involved in this circuit.
-	 */
-	public List<QuantumWire> getWires() {
-		return wires;
-	}
-
-	private String pad(final String binaryString, final int size) {
-		return "0".repeat(size - binaryString.length()) + binaryString;
-	}
-
-	/**
-	 * Removes the last wire from the circuit.
-	 */
-	public void removeLastWire() {
-		if (wires.size() > 0) {
-			wires.remove(wires.size() - 1);
-		}
-	}
-
-	/**
-	 * Sets a gate to the circuit. Will remove any conflicting gates at that
-	 * position.
-	 * 
-	 * @param gate The new gate to set.
-	 */
-	public void setGate(final QuantumGate gate) {
-		gates.removeIf(x -> x.getGatePosition() == gate.getGatePosition() && x.getWires().containsAll(gate.getWires()));
-		try {
-			gate.getGateMatrix();
-			if (!gate.getGateType().equals("I") && gate.getGatePosition() < getMaxWireGatePosition() + 2) {
-				this.gates.add(gate);
-			}
-		} catch (UnsupportedOperationException e) {
-			throw e;
-		}
-	}
-
-	/**
-	 * Sets the wires to this circuit.
-	 * 
-	 * @param wires
-	 */
-	public void setWires(final List<QuantumWire> wires) {
-		this.wires = wires;
-	}
-
-	/**
-	 * @param afterIndex The index position of the state to get. Calculates the
-	 *                   state after all gates at that index position have ran.
 	 * @return A list of complex numbers associated with the probability of a qubit
 	 *         measuring one.
 	 */
@@ -228,5 +130,102 @@ public class QuantumCircuit {
 			returnValue.add(new Complex(runningProbability));
 		}
 		return returnValue;
+	}
+
+	/**
+	 * @param afterIndex The index position of the state to get. Calculates the
+	 *                   state after all gates at that index position have ran.
+	 * @return The state of the circuit at any index position.
+	 */
+	public Complex[][] getState(final int afterIndex) {
+		Complex[][] gateMatrix = { { new Complex(1) } };
+		if (wires.stream().filter(x -> x.isDirty()).count() > 0) {
+			stateTransposeCache.clear();
+			wires.forEach(x -> x.resetDirty());
+		}
+		if (stateTransposeCache.containsKey(afterIndex)) {
+			return stateFromCache(stateTransposeCache.get(afterIndex));
+		} else {
+			if (afterIndex == 0) {
+				for (int n = 0; n < wires.size(); ++n) {
+					gateMatrix = tensor(gateMatrix, wires.get(n).getInitialValue().getState());
+				}
+			} else {
+				for (int n = 0; n < wires.size();) {
+					final int wirePosition = n;
+					List<QuantumGate> thisStateGate = gates.stream().filter(x -> x.getGatePosition() == afterIndex - 1)
+							.filter(x -> x.getWires().contains(wirePosition)).collect(Collectors.toList());
+					if (thisStateGate.size() > 0) {
+						gateMatrix = tensor(gateMatrix, thisStateGate.get(0).getGateMatrix());
+						n += Math.round(Math.log(thisStateGate.get(0).getGateMatrix().length) / Math.log(2));
+					} else {
+						gateMatrix = tensor(gateMatrix, QuantumGate.getIdentityMatrix());
+						n++;
+					}
+					// if (wires.get(n).getGate(afterIndex - 1).getGateType() == GateType.CNOT) {
+					// n++;
+					// }
+				}
+				gateMatrix = multiply(gateMatrix, getState(afterIndex - 1));
+			}
+			stateTransposeCache.put(afterIndex, stateToCache(gateMatrix));
+			return gateMatrix;
+		}
+	}
+
+	private List<Complex> stateToCache(Complex[][] state) {
+		List<Complex> returnValue = new ArrayList<>(state.length);
+		for (int n = 0; n < state.length; ++n) {
+			returnValue.add(state[n][0]);
+		}
+		return returnValue;
+	}
+
+	private Complex[][] stateFromCache(List<Complex> state) {
+		Complex[][] returnValue = new Complex[state.size()][1];
+		for (int n = 0; n < state.size(); ++n) {
+			returnValue[n][0] = state.get(n);
+		}
+		return returnValue;
+	}
+
+	/**
+	 * @return The list of wires involved in this circuit.
+	 */
+	public List<QuantumWire> getWires() {
+		return wires;
+	}
+
+	/**
+	 * Removes the last wire from the circuit.
+	 */
+	public void removeLastWire() {
+		if (wires.size() > 0) {
+			wires.remove(wires.size() - 1);
+		}
+		stateTransposeCache.clear();
+	}
+
+	/**
+	 * Sets a gate to the circuit. Will remove any conflicting gates at that
+	 * position.
+	 * 
+	 * @param gate The new gate to set.
+	 */
+	public void setGate(final QuantumGate gate) {
+		int maxStateCached = stateTransposeCache.keySet().stream().max(Comparator.naturalOrder()).orElse(0);
+		for (int state = gate.getGatePosition(); state < maxStateCached; ++state) {
+			stateTransposeCache.remove(state);
+		}
+		gates.removeIf(x -> x.getGatePosition() == gate.getGatePosition() && x.getWires().containsAll(gate.getWires()));
+		try {
+			gate.getGateMatrix();
+			if (!gate.getGateType().equals("I") && gate.getGatePosition() < getMaxWireGatePosition() + 2) {
+				this.gates.add(gate);
+			}
+		} catch (UnsupportedOperationException e) {
+			throw e;
+		}
+
 	}
 }

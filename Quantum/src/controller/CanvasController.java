@@ -1,5 +1,12 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -19,6 +26,8 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import model.Complex;
 import model.ControlledQuantumGate;
 import model.QuantumCircuit;
@@ -182,7 +191,7 @@ public final class CanvasController {
 	 * @param event The event source.
 	 */
 	@FXML
-	private void handleClear(final ActionEvent event) {
+	private void handleNew(final ActionEvent event) {
 		qc = new QuantumCircuit();
 		rebind();
 	}
@@ -201,6 +210,7 @@ public final class CanvasController {
 	 * Rebinds the whole canvas.
 	 */
 	private void rebind() {
+		graphicsContext = new QuantumGraphicsContext(canvas.getGraphicsContext2D(), qc.getWires().size());
 		drawCanvas();
 		setStatesTable();
 		setQubitsTable();
@@ -212,7 +222,6 @@ public final class CanvasController {
 	 * @param numberOfQubits The number of qubits.
 	 */
 	private void setNumberOfQubits(final int numberOfQubits) {
-		graphicsContext = new QuantumGraphicsContext(canvas.getGraphicsContext2D(), numberOfQubits);
 		while (qc.getWires().size() < numberOfQubits) {
 			qc.addWire(new QuantumWire());
 		}
@@ -285,6 +294,63 @@ public final class CanvasController {
 				table.add(new QuantumStateViewer(qc.getWires().size(), n, states));
 			}
 			tbvStates.getItems().setAll(table);
+		}
+	}
+
+	@FXML
+	private void handleFileOpen(ActionEvent event) {
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Open Quantum Circuit");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"Quantum Circuit Designer Files (*.qcd)", "*.qcd");
+		fc.getExtensionFilters().add(extFilter);
+		File file = fc.showOpenDialog(canvas.getScene().getWindow());
+		if (file != null) {
+			try (ObjectInputStream circuitReader = new ObjectInputStream(new FileInputStream(file))) {
+				qc = (QuantumCircuit) circuitReader.readObject();
+				rebind();
+			} catch (FileNotFoundException e) {
+				Alert error = new Alert(AlertType.ERROR);
+				error.setTitle("File not found");
+				error.setContentText("File not found!");
+				error.showAndWait();
+			} catch (IOException e) {
+				Alert error = new Alert(AlertType.ERROR);
+				error.setTitle("Invalid file format");
+				error.setContentText("That file is not recognized as a quantum circuit designer file!");
+				error.showAndWait();
+			} catch (ClassNotFoundException e) {
+				Alert error = new Alert(AlertType.ERROR);
+				error.setTitle("Class not found");
+				error.setContentText("Class not found!");
+				error.showAndWait();
+			}
+		}
+	}
+
+	@FXML
+	private void handleFileSave(ActionEvent event) {
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Open Quantum Circuit");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"Quantum Circuit Designer Files (*.qcd)", "*.qcd");
+		fc.getExtensionFilters().add(extFilter);
+		File file = fc.showSaveDialog(canvas.getScene().getWindow());
+		if (!file.getName().endsWith(".qcd")) {
+			file = new File(file.getAbsolutePath() + ".qcd");
+		}
+		try (ObjectOutputStream circuitWriter = new ObjectOutputStream(new FileOutputStream(file))) {
+			circuitWriter.writeObject(qc);
+		} catch (FileNotFoundException e) {
+			Alert error = new Alert(AlertType.ERROR);
+			error.setTitle("File not found");
+			error.setContentText("File not found!");
+			error.showAndWait();
+		} catch (IOException e) {
+			Alert error = new Alert(AlertType.ERROR);
+			error.setTitle("Invalid file format");
+			error.setContentText("That file is not recognized as a quantum circuit designer file!");
+			error.showAndWait();
 		}
 	}
 }

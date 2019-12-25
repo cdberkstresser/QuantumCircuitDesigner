@@ -1,14 +1,19 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Represents a wire in a quantum circuit.
  * 
  * @author cdberkstresser
  *
  */
-public class QuantumWire {
+public class QuantumWire implements Serializable {
+	/** Serializable ID. */
+	private static final long serialVersionUID = -5515084749351383005L;
 	/** The qubit that starts the wire out. */
 	private Qubit start = new Qubit();
+	private boolean dirty;
 
 	/**
 	 * Constructor. Defaults to |0>.
@@ -41,15 +46,6 @@ public class QuantumWire {
 	}
 
 	/**
-	 * Sets the start value of the qubit in this wire.
-	 * 
-	 * @param start The start value.
-	 */
-	public void setStart(final Qubit start) {
-		this.start = start;
-	}
-
-	/**
 	 * Negates the start value of the qubit in this wire.
 	 */
 	public void xStart() {
@@ -58,5 +54,14 @@ public class QuantumWire {
 		} else {
 			start = new Qubit();
 		}
+		dirty = true;
+	}
+
+	public boolean isDirty() {
+		return dirty;
+	}
+
+	public void resetDirty() {
+		dirty = false;
 	}
 }

@@ -1,12 +1,16 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * A Qubit in a circuit.
  * 
  * @author cdberkstresser
  *
  */
-public final class Qubit {
+public final class Qubit implements Serializable {
+	/** Serializable ID. */
+	private static final long serialVersionUID = 6049197754054542798L;
 	/** The first value of the matrix for this qubit. */
 	private Complex x;
 	/** The second value of the matrix for this qubit. */
@@ -42,28 +46,10 @@ public final class Qubit {
 	}
 
 	/**
-	 * Sets the first value of the matrix for this qubit.
-	 * 
-	 * @param x The value to set.
-	 */
-	public void setX(final Complex x) {
-		this.x = x;
-	}
-
-	/**
 	 * @return The second value of the matrix for this qubit.
 	 */
 	public Complex getY() {
 		return y;
-	}
-
-	/**
-	 * Sets the second value of the matrix for this qubit.
-	 * 
-	 * @param y The value to set.
-	 */
-	public void setY(final Complex y) {
-		this.y = y;
 	}
 
 	@Override

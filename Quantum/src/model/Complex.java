@@ -1,12 +1,16 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Complex number class.
  * 
  * @author cdberkstresser
  *
  */
-public final class Complex {
+public final class Complex implements Serializable {
+	/** Serializable ID. */
+	private static final long serialVersionUID = 7676764277764311560L;
 	/** The number of digits to which to round numbers. */
 	public static final int PRECISION = 3;
 	/** The real part of the complex number. */
@@ -49,28 +53,10 @@ public final class Complex {
 	}
 
 	/**
-	 * Set the real portion of the complex number.
-	 * 
-	 * @param real The real portion.
-	 */
-	public void setReal(final double real) {
-		this.real = real;
-	}
-
-	/**
 	 * @return Imaginary portion of the complex number.
 	 */
 	public double getImaginary() {
 		return imaginary;
-	}
-
-	/**
-	 * Set the imaginary portion of the complex number.
-	 * 
-	 * @param imaginary The imaginary portion.
-	 */
-	public void setImaginary(final double imaginary) {
-		this.imaginary = imaginary;
 	}
 
 	/**

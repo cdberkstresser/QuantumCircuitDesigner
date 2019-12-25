@@ -20,6 +20,14 @@
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
 			<menus>
+            <Menu mnemonicParsing="false" text="Circuit">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleNew" text="New" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleFileOpen" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleFileSave" text="Save" />
+              </items>
+            </Menu>
 				<Menu mnemonicParsing="false" text="Qubits">
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="1" />
@@ -28,6 +36,8 @@
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="4" />
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="5" />
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="6" />
+						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="7" />
+						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="8" />
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="Gates">
@@ -55,11 +65,6 @@
     	    	        <RadioMenuItem mnemonicParsing="false" text="CC00NOT" toggleGroup="$tgGates" />
 					</items>
 				</Menu>
-            <Menu mnemonicParsing="false" text="Circuit">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleClear" text="Clear" />
-              </items>
-            </Menu>
 			</menus>
 		</MenuBar>
 	</top>

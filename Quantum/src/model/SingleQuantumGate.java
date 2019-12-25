@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -12,6 +13,8 @@ import java.util.List;
  *
  */
 public class SingleQuantumGate implements QuantumGate {
+	/** Serializable ID. */
+	private static final long serialVersionUID = -2798838823193813073L;
 	/** List of gates supported by this class. */
 	private static List<String> gateTypes = new ArrayList<>(Arrays.asList("I", "H", "X", "S", "T"));
 	/** The gate type as a string. Should be filtered through the list above. */
@@ -81,15 +84,6 @@ public class SingleQuantumGate implements QuantumGate {
 	}
 
 	/**
-	 * Set the gate type.
-	 */
-	@Override
-	public void setGateType(final String value) {
-		gateType = value;
-
-	}
-
-	/**
 	 * @return a string representation of this gate.
 	 */
 	@Override
@@ -106,14 +100,6 @@ public class SingleQuantumGate implements QuantumGate {
 	@Override
 	public int getGatePosition() {
 		return gatePosition;
-	}
-
-	/**
-	 * Sets the gate position to a different location.
-	 */
-	@Override
-	public void setGatePosition(final int value) {
-		this.gatePosition = value;
 	}
 
 	/**
