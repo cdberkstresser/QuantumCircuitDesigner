@@ -1,0 +1,21 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f9dbc7830ad, pid=16825, tid=16842
+#
+# JRE version: OpenJDK Runtime Environment (13.0+33) (build 13+33-Ubuntu-1)
+# Java VM: OpenJDK 64-Bit Server VM (13+33-Ubuntu-1, mixed mode, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libjimage.so+0x30ad]
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %d %P" (or dumping to /home/cberkstresser/git/personal/Quantum/core.16825)
+#
+# If you would like to submit a bug report, please visit:
+#   Unknown
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:38257 -javaagent:/usr/share/eclipse/configuration/org.eclipse.osgi/405/0/.cp/lib/javaagent-shaded.jar -Dfile.encoding=UTF-8 --module-path=/home/cberkstresser/git/personal/Quantum/target/classes:/home/cberkstresser/.m2/repository/org/openjfx/javafx-base/13/javafx-base-13-linux.jar:/home/cberkstresser/.m2/repository/org/openjfx/javafx-fxml/13/javafx-fxml-13-linux.jar:/home/cberkstresser/.m2/repository/org/openjfx/javafx-controls/13/javafx-controls-13-linux.jar:/home/cberkstresser/.m2/repository/org/openjfx/javafx-graphics/13/javafx-graphics-13-linux.jar -Djdk.module.main=quantum quantum/application.Main
+
+Host: 
