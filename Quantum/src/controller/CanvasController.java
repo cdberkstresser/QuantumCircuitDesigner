@@ -48,13 +48,15 @@ public final class CanvasController {
 	 * The maximum number of quantum wires we want to potentially support on the
 	 * canvas.
 	 */
-	public static final int MAX_WIRES_AND_STATES = 10;
+	public static final int MAX_WIRES_AND_STATES = 9;
 	/** 3/5 of the gate height. */
 	public static final int THREE_FIFTHS_HEIGHT = GATE_HEIGHT * 3 / 5;
 	/** length of each wire segment. */
 	public static final int WIRE_SEGMENT_WIDTH = 150;
-	/** Main canvas on which to draw the circuit. */
 
+	/**
+	 * Main canvas.
+	 */
 	@FXML
 	private Canvas canvas;
 	/** Graphics context of the main canvas. */
@@ -83,7 +85,6 @@ public final class CanvasController {
 	private void drawCanvas() {
 		graphicsContext.clearAll();
 		if (qc.getWires().size() > 0) {
-			final int wireSpacing = (int) (canvas.getHeight() / (qc.getWires().size() + 1));
 			for (int wire = 0; wire < qc.getWires().size(); ++wire) {
 				// initial qubits
 				graphicsContext.setQubitLabel(qc.getWires().get(wire).getInitialValue().toString(), wire);
@@ -222,12 +223,7 @@ public final class CanvasController {
 	 * @param numberOfQubits The number of qubits.
 	 */
 	private void setNumberOfQubits(final int numberOfQubits) {
-		while (qc.getWires().size() < numberOfQubits) {
-			qc.addWire(new QuantumWire());
-		}
-		while (qc.getWires().size() > numberOfQubits) {
-			qc.removeLastWire();
-		}
+		qc.setNumberOfQubits(numberOfQubits);
 		rebind();
 	}
 

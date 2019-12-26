@@ -80,6 +80,14 @@ public class QuantumCircuit implements Serializable {
 	}
 
 	/**
+	 * Adds a wire to the circuit.
+	 */
+	public void addWire() {
+		addWire(new QuantumWire());
+		stateTransposeCache.clear();
+	}
+
+	/**
 	 * @param wire     The wire index to get.
 	 * @param position The position index to get.
 	 * @return a gate from the circuit by wire and position.
@@ -162,9 +170,6 @@ public class QuantumCircuit implements Serializable {
 						gateMatrix = tensor(gateMatrix, QuantumGate.getIdentityMatrix());
 						n++;
 					}
-					// if (wires.get(n).getGate(afterIndex - 1).getGateType() == GateType.CNOT) {
-					// n++;
-					// }
 				}
 				gateMatrix = multiply(gateMatrix, getState(afterIndex - 1));
 			}
@@ -227,5 +232,14 @@ public class QuantumCircuit implements Serializable {
 			throw e;
 		}
 
+	}
+
+	public void setNumberOfQubits(int numberOfQubits) {
+		while (wires.size() < numberOfQubits) {
+			addWire(new QuantumWire());
+		}
+		while (wires.size() > numberOfQubits) {
+			removeLastWire();
+		}
 	}
 }
