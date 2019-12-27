@@ -154,11 +154,11 @@ public class QuantumCircuit implements Serializable {
 		if (stateTransposeCache.containsKey(afterIndex)) {
 			return stateFromCache(stateTransposeCache.get(afterIndex));
 		} else {
-			if (afterIndex == 0) {
+			if (afterIndex == 0) { // afterIndex0 refers to the gates themselves
 				for (int n = 0; n < wires.size(); ++n) {
 					gateMatrix = tensor(gateMatrix, wires.get(n).getInitialValue().getState());
 				}
-			} else {
+			} else { // afterIndex1 refers to gates on gate position zero, etc.
 				for (int n = 0; n < wires.size();) {
 					final int wirePosition = n;
 					List<QuantumGate> thisStateGate = gates.stream().filter(x -> x.getGatePosition() == afterIndex - 1)
@@ -220,7 +220,7 @@ public class QuantumCircuit implements Serializable {
 	 */
 	public void setGate(final QuantumGate gate) {
 		int maxStateCached = stateTransposeCache.keySet().stream().max(Comparator.naturalOrder()).orElse(0);
-		for (int state = gate.getGatePosition(); state < maxStateCached; ++state) {
+		for (int state = gate.getGatePosition(); state <= maxStateCached; ++state) {
 			stateTransposeCache.remove(state);
 		}
 		gates.removeIf(x -> x.getGatePosition() == gate.getGatePosition() && x.getWires().containsAll(gate.getWires()));
