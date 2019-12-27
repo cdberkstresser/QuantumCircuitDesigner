@@ -113,8 +113,8 @@
 		</div>
 		<b:tabView>
 			<b:tab title="States">
-				<b:dataTable id="qubitsTable" class="bound"
-					value="#{quantumCircuitService.statesTable}" var="row">
+				<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
+					pdf="true" value="#{quantumCircuitService.statesTable}" var="row">
 					<b:dataTableColumn value="#{row.qubits}" label="Qubits"
 						style="width:10%" />
 					<b:dataTableColumn value="#{row.state0}" label="State 0"
@@ -139,8 +139,8 @@
 				</b:dataTable>
 			</b:tab>
 			<b:tab title="Qubits">
-				<b:dataTable id="qubitsTable" class="bound"
-					value="#{quantumCircuitService.qubitsTable}" var="row">
+				<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
+					pdf="true" value="#{quantumCircuitService.qubitsTable}" var="row">
 					<b:dataTableColumn value="#{row.qubit}" label="Qubit"
 						style="width:10%" />
 					<b:dataTableColumn value="#{row.state0}" label="State 0"
