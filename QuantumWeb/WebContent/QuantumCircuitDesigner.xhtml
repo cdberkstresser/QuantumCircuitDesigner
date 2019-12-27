@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Quantum Circuit Designer</title>
+</h:head>
+<h:body>
+	<h:form enctype="multipart/form-data">
+		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true">
+			<b:navbarLinks>
+				<b:dropMenu value="Circuit">
+					<b:navCommandLink value="New"
+						action="#{quantumCircuitService.clear()}"></b:navCommandLink>
+					<b:navLink></b:navLink>
+					<b:navLink value="Open" href="#">
+						<h:inputFile value="#{quantumCircuitService.file}">
+							<f:ajax listener="#{quantumCircuitService.open()}" render="@form" />
+						</h:inputFile>
+					</b:navLink>
+					<b:navCommandLink value="Save"
+						action="#{quantumCircuitService.getCircuitAsFile()}"></b:navCommandLink>
+				</b:dropMenu>
+				<b:dropMenu value="Samples">
+					<b:navCommandLink value="CNOT"
+						action="#{quantumCircuitService.setCircuit('CNOT')}">
+					</b:navCommandLink>
+					<b:navCommandLink value="CCNOT"
+						action="#{quantumCircuitService.setCircuit('CCNOT')}">
+					</b:navCommandLink>
+					<b:navCommandLink value="SWAP"
+						action="#{quantumCircuitService.setCircuit('SWAP')}">
+					</b:navCommandLink>
+
+					<b:navCommandLink value="Bell State"
+						action="#{quantumCircuitService.setCircuit('Bell State')}">
+					</b:navCommandLink>
+					<b:navCommandLink value="GHZ State"
+						action="#{quantumCircuitService.setCircuit('GHZ State')}">
+					</b:navCommandLink>
+					<b:navCommandLink value="W State"
+						action="#{quantumCircuitService.setCircuit('W State')}">
+					</b:navCommandLink>
+				</b:dropMenu>
+				<b:dropMenu value="Qubits">
+					<b:navCommandLink value="1"
+						action="#{quantumCircuitService.setNumberOfQubits(1)}"></b:navCommandLink>
+					<b:navCommandLink value="2"
+						action="#{quantumCircuitService.setNumberOfQubits(2)}"></b:navCommandLink>
+					<b:navCommandLink value="3"
+						action="#{quantumCircuitService.setNumberOfQubits(3)}"></b:navCommandLink>
+					<b:navCommandLink value="4"
+						action="#{quantumCircuitService.setNumberOfQubits(4)}"></b:navCommandLink>
+					<b:navCommandLink value="5"
+						action="#{quantumCircuitService.setNumberOfQubits(5)}"></b:navCommandLink>
+					<b:navCommandLink value="6"
+						action="#{quantumCircuitService.setNumberOfQubits(6)}"></b:navCommandLink>
+					<b:navCommandLink value="7"
+						action="#{quantumCircuitService.setNumberOfQubits(7)}"></b:navCommandLink>
+					<b:navCommandLink value="8"
+						action="#{quantumCircuitService.setNumberOfQubits(8)}"></b:navCommandLink>
+				</b:dropMenu>
+			</b:navbarLinks>
+		</b:navBar>
+		<b:label text="Gates:"></b:label>
+		<b:buttonToolbar>
+
+			<b:buttonGroup>
+				<b:button value="I"
+					onclick="setGateType('I',0.0);document.getElementsByTag('canvas')[0].focus();" />
+				<b:button value="H"
+					onclick="setGateType('H',0.0);document.getElementsByTag('canvas')[0].focus();" />
+				<b:button value="X"
+					onclick="setGateType('X',0.0);document.getElementsByTag('canvas')[0].focus();" />
+				<b:button value="S"
+					onclick="setGateType('S',0.0);document.getElementsByTag('canvas')[0].focus();" />
+				<b:button value="T"
+					onclick="setGateType('T',0.0);document.getElementsByTag('canvas')[0].focus();" />
+			</b:buttonGroup>
+			<b:buttonGroup>
+				<b:button value="Rx"
+					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rx',value);" />
+				<b:button value="Ry"
+					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Ry',value);" />
+				<b:button value="Rz"
+					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rz',value);" />
+			</b:buttonGroup>
+			<b:buttonGroup>
+				<b:button value="CNOT" onclick="setGateType('CNOT',0.0);" />
+				<b:button value="C0NOT" onclick="setGateType('C0NOT',0.0);" />
+				<b:button value="CH" onclick="setGateType('CH',0.0);" />
+				<b:button value="C0H" onclick="setGateType('C0H',0.0);" />
+			</b:buttonGroup>
+			<b:buttonGroup>
+				<b:button value="CCNOT" onclick="setGateType('CCNOT',0.0);" />
+				<b:button value="CC00NOT" onclick="setGateType('CC00NOT',0.0);" />
+			</b:buttonGroup>
+		</b:buttonToolbar>
+		<b:remoteCommand name="setGateType" id="setGateType"
+			actionListener="#{quantumCircuitService.setGateType}"
+			parameters="gateType,value" />
+		<div style="margin-left: 14%; display: block;">
+			<b:canvas class="bound" width="1600" height="500"
+				drawing="#{quantumCircuitService.drawing}" style="width:100%;">
+			</b:canvas>
+			<b:remoteCommand name="setClick" id="setClick"
+				actionListener="#{quantumCircuitService.handleCanvasClick}"
+				parameters="x,y,width,height" update="@(.bound)" />
+		</div>
+		<b:tabView>
+			<b:tab title="States">
+				<b:dataTable id="qubitsTable" class="bound"
+					value="#{quantumCircuitService.statesTable}" var="row">
+					<b:dataTableColumn value="#{row.qubits}" label="Qubits"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state0}" label="State 0"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state1}" label="State 1"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state2}" label="State 2"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state3}" label="State 3"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state4}" label="State 4"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state5}" label="State 5"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state6}" label="State 6"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state7}" label="State 7"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state8}" label="State 8"
+						style="width:10%" />
+
+				</b:dataTable>
+			</b:tab>
+			<b:tab title="Qubits">
+				<b:dataTable id="qubitsTable" class="bound"
+					value="#{quantumCircuitService.qubitsTable}" var="row">
+					<b:dataTableColumn value="#{row.qubit}" label="Qubit"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state0}" label="State 0"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state1}" label="State 1"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state2}" label="State 2"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state3}" label="State 3"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state4}" label="State 4"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state5}" label="State 5"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state6}" label="State 6"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state7}" label="State 7"
+						style="width:10%" />
+					<b:dataTableColumn value="#{row.state8}" label="State 8"
+						style="width:10%" />
+				</b:dataTable>
+			</b:tab>
+		</b:tabView>
+	</h:form>
+</h:body>
+</html>

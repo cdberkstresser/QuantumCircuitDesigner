@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<title>Quantum Circuit Designer</title>
+</h:head>
+<h:body>
+	<h:form>
+		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true">
+			<b:navbarLinks>
+				<b:dropMenu value="Circuit">
+					<b:navCommandLink value="New"
+						action="#{quantumCircuitService.clear()}"></b:navCommandLink>
+					<b:navLink></b:navLink>
+					<b:navLink value="Open" href="#"></b:navLink>
+					<b:navLink value="Save" href="#"></b:navLink>
+				</b:dropMenu>
+				<b:dropMenu value="Qubits">
+					<b:navCommandLink value="1"
+						action="#{quantumCircuitService.setNumberOfQubits(1)}"></b:navCommandLink>
+					<b:navCommandLink value="2"
+						action="#{quantumCircuitService.setNumberOfQubits(2)}"></b:navCommandLink>
+					<b:navCommandLink value="3"
+						action="#{quantumCircuitService.setNumberOfQubits(3)}"></b:navCommandLink>
+					<b:navCommandLink value="4"
+						action="#{quantumCircuitService.setNumberOfQubits(4)}"></b:navCommandLink>
+					<b:navCommandLink value="5"
+						action="#{quantumCircuitService.setNumberOfQubits(5)}"></b:navCommandLink>
+					<b:navCommandLink value="6"
+						action="#{quantumCircuitService.setNumberOfQubits(6)}"></b:navCommandLink>
+					<b:navCommandLink value="7"
+						action="#{quantumCircuitService.setNumberOfQubits(7)}"></b:navCommandLink>
+					<b:navCommandLink value="8"
+						action="#{quantumCircuitService.setNumberOfQubits(8)}"></b:navCommandLink>
+				</b:dropMenu>
+				<b:dropMenu value="Gates">
+					<b:navLink value="I" href="#"></b:navLink>
+					<b:navLink value="H" href="#"></b:navLink>
+					<b:navLink value="X" href="#"></b:navLink>
+					<b:navLink value="S" href="#"></b:navLink>
+					<b:navLink value="T" href="#"></b:navLink>
+				</b:dropMenu>
+			</b:navbarLinks>
+		</b:navBar>
+		<b:canvas style="width:100%" width="1600" height="900"
+			drawing="#{quantumCircuitService.drawing}" />
+	</h:form>
+</h:body>
+</html>
