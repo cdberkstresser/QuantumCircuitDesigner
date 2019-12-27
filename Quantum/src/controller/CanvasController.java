@@ -48,7 +48,7 @@ public final class CanvasController {
 	 * The maximum number of quantum wires we want to potentially support on the
 	 * canvas.
 	 */
-	public static final int MAX_WIRES_AND_STATES = 9;
+	public static final int MAX_WIRES_AND_STATES = 11;
 	/** 3/5 of the gate height. */
 	public static final int THREE_FIFTHS_HEIGHT = GATE_HEIGHT * 3 / 5;
 	/** length of each wire segment. */

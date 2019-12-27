@@ -153,4 +153,28 @@ public final class QuantumQubitViewer {
 		return new Complex();
 
 	}
+	/**
+	 * Crosstab.
+	 * 
+	 * @return Get state at point eight.
+	 */
+	public Complex getState9() {
+		if (states.size() > 9) {
+			return states.get(9);
+		}
+		return new Complex();
+
+	}
+	/**
+	 * Crosstab.
+	 * 
+	 * @return Get state at point eight.
+	 */
+	public Complex getState10() {
+		if (states.size() > 10) {
+			return states.get(10);
+		}
+		return new Complex();
+
+	}
 }

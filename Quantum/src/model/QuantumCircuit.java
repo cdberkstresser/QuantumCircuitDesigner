@@ -208,6 +208,7 @@ public class QuantumCircuit implements Serializable {
 		if (wires.size() > 0) {
 			wires.remove(wires.size() - 1);
 		}
+		gates.removeIf(x -> x.getWires().contains(wires.size()));
 		stateTransposeCache.clear();
 	}
 
