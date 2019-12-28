@@ -5,9 +5,10 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core">
-
 <h:head>
 	<title>Quantum Circuit Designer</title>
+	<script src="js/jquery-3.4.1.js"></script>
+	<script src="js/datatables.min.js"></script>
 </h:head>
 <h:body>
 	<h:form enctype="multipart/form-data">
@@ -70,16 +71,11 @@
 		<b:buttonToolbar>
 
 			<b:buttonGroup>
-				<b:button value="I"
-					onclick="setGateType('I',0.0);document.getElementsByTag('canvas')[0].focus();" />
-				<b:button value="H"
-					onclick="setGateType('H',0.0);document.getElementsByTag('canvas')[0].focus();" />
-				<b:button value="X"
-					onclick="setGateType('X',0.0);document.getElementsByTag('canvas')[0].focus();" />
-				<b:button value="S"
-					onclick="setGateType('S',0.0);document.getElementsByTag('canvas')[0].focus();" />
-				<b:button value="T"
-					onclick="setGateType('T',0.0);document.getElementsByTag('canvas')[0].focus();" />
+				<b:button value="I" onclick="setGateType('I',0.0);" />
+				<b:button value="H" onclick="setGateType('H',0.0);" />
+				<b:button value="X" onclick="setGateType('X',0.0);" />
+				<b:button value="S" onclick="setGateType('S',0.0);" />
+				<b:button value="T" onclick="setGateType('T',0.0);" />
 			</b:buttonGroup>
 			<b:buttonGroup>
 				<b:button value="Rx"
