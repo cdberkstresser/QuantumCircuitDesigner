@@ -11,6 +11,7 @@
 	<script src="js/datatables.min.js"></script>
 </h:head>
 <h:body>
+
 	<h:form enctype="multipart/form-data">
 		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true">
 			<b:navbarLinks>
@@ -69,7 +70,6 @@
 		</b:navBar>
 		<b:label text="Gates:"></b:label>
 		<b:buttonToolbar>
-
 			<b:buttonGroup>
 				<b:button value="I" onclick="setGateType('I',0.0);" />
 				<b:button value="H" onclick="setGateType('H',0.0);" />
@@ -96,70 +96,75 @@
 				<b:button value="CC00NOT" onclick="setGateType('CC00NOT',0.0);" />
 			</b:buttonGroup>
 		</b:buttonToolbar>
-		<b:remoteCommand name="setGateType" id="setGateType"
-			actionListener="#{quantumCircuitService.setGateType}"
-			parameters="gateType,value" />
-		<div style="margin-left: 14%; display: block;">
-			<b:canvas class="bound" width="1600" height="500"
-				drawing="#{quantumCircuitService.drawing}" style="width:100%;">
-			</b:canvas>
-			<b:remoteCommand name="setClick" id="setClick"
-				actionListener="#{quantumCircuitService.handleCanvasClick}"
-				parameters="x,y,width,height" update="@(.bound)" />
-		</div>
-		<b:tabView>
-			<b:tab title="States">
-				<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
-					pdf="true" value="#{quantumCircuitService.statesTable}" var="row">
-					<b:dataTableColumn value="#{row.qubits}" label="Qubits"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state0}" label="State 0"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state1}" label="State 1"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state2}" label="State 2"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state3}" label="State 3"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state4}" label="State 4"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state5}" label="State 5"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state6}" label="State 6"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state7}" label="State 7"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state8}" label="State 8"
-						style="width:10%" />
+		<div style="min-width: 800px;">
+			<b:remoteCommand name="setGateType" id="setGateType"
+				actionListener="#{quantumCircuitService.setGateType}"
+				parameters="gateType,value" />
+			<div style="margin-left: 14%; display: block;">
+				<b:canvas class="bound" width="1600" height="500"
+					drawing="#{quantumCircuitService.drawing}" style="width:100%;">
+				</b:canvas>
+				<b:remoteCommand name="setClick" id="setClick"
+					actionListener="#{quantumCircuitService.handleCanvasClick}"
+					parameters="x,y,width,height" update="@(.bound)" />
+			</div>
+			<b:tabView>
+				<b:tab title="States">
+					<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
+						pdf="true" value="#{quantumCircuitService.statesTable}" var="row"
+						style="min-width:800px;">
+						<b:dataTableColumn value="#{row.qubits}" label="Qubits"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state0}" label="State 0"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state1}" label="State 1"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state2}" label="State 2"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state3}" label="State 3"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state4}" label="State 4"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state5}" label="State 5"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state6}" label="State 6"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state7}" label="State 7"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state8}" label="State 8"
+							style="width:10%" />
 
-				</b:dataTable>
-			</b:tab>
-			<b:tab title="Qubits">
-				<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
-					pdf="true" value="#{quantumCircuitService.qubitsTable}" var="row">
-					<b:dataTableColumn value="#{row.qubit}" label="Qubit"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state0}" label="State 0"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state1}" label="State 1"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state2}" label="State 2"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state3}" label="State 3"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state4}" label="State 4"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state5}" label="State 5"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state6}" label="State 6"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state7}" label="State 7"
-						style="width:10%" />
-					<b:dataTableColumn value="#{row.state8}" label="State 8"
-						style="width:10%" />
-				</b:dataTable>
-			</b:tab>
-		</b:tabView>
+					</b:dataTable>
+				</b:tab>
+				<b:tab title="Qubits">
+					<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
+						pdf="true" value="#{quantumCircuitService.qubitsTable}" var="row"
+						style="min-width:800px;">
+						<b:dataTableColumn value="#{row.qubit}" label="Qubit"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state0}" label="State 0"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state1}" label="State 1"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state2}" label="State 2"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state3}" label="State 3"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state4}" label="State 4"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state5}" label="State 5"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state6}" label="State 6"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state7}" label="State 7"
+							style="width:10%" />
+						<b:dataTableColumn value="#{row.state8}" label="State 8"
+							style="width:10%" />
+					</b:dataTable>
+
+				</b:tab>
+			</b:tabView>
+		</div>
 	</h:form>
 </h:body>
 </html>
