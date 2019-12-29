@@ -45,7 +45,7 @@ public class QuantumCircuitService {
 	/** width of canvas. */
 	public static final int WIDTH = 1600;
 	/** length of each wire segment. */
-	public static final int WIRE_SEGMENT_WIDTH = 180;
+	public static final int WIRE_SEGMENT_WIDTH = 184;
 	/** Used for reading files into the circuit. */
 	private InputStream file;
 	/** The gate type used for adding to the circuit. */
@@ -62,6 +62,8 @@ public class QuantumCircuitService {
 	private QuantumCircuit qc = new QuantumCircuit();
 	/** a list of pending wires for controlled qubits. */
 	private List<Integer> wires = new ArrayList<>();
+	/** a pending position for the qubit controls. */
+	private int position;
 	/** The vertical spacing between wires depending on how many wires there are. */
 	private int wireSpacing;
 	/** A running error message for output to the user. */
@@ -105,7 +107,9 @@ public class QuantumCircuitService {
 				setQubitLabel(qc.getWires().get(wire).getStart().toString(), wire, canvas);
 				for (int position = 0; position < qc.getMaxWireGatePosition() + 2; ++position) {
 					setNextWireSegment(wire, position, canvas);
-					if (qc.getGate(wire, position) == null) {
+					if (position == this.position && wires.contains(wire)) {
+						setControlDot(wire, position, canvas);
+					} else if (qc.getGate(wire, position) == null) {
 						setEmptyGate(wire, position, canvas);
 					} else {
 						String gateType = qc.getGate(wire, position).getGateType();
@@ -246,13 +250,14 @@ public class QuantumCircuitService {
 					try {
 						int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
 						wires.add(wire);
+						this.position = gatePosition;
 						if (wires.size() > numberOfControls) {
 							qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
 							wires.clear();
 						}
 					} catch (UnsupportedOperationException error) {
 						wires.clear();
-						errorMessage = "That particular gate configuration is not supported.";
+						errorMessage = "That particular gate configuration is not supported!";
 					}
 
 				}
@@ -434,6 +439,7 @@ public class QuantumCircuitService {
 		gateType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("gateType");
 		parameterValue = Double.parseDouble(
 				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("value"));
+		wires.clear();
 	}
 
 	/**
@@ -485,13 +491,6 @@ public class QuantumCircuitService {
 		String returnValue;
 		if (qc.getWires().size() == 0) {
 			returnValue = "First, add qubits to your circuit from the Qubits menu";
-		} else if (qc.getGates().size() == 0) {
-			if (gateType.equals("I")) {
-				returnValue = "Select a gate from the menu and then click on an empty gate position to add it to the circuit.";
-			} else {
-				returnValue = "Choose an empty gate position on the circuit on which to place your " + gateType
-						+ " gate or choose a different gate type.";
-			}
 		} else if (gateType.startsWith("C")) {
 			int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
 			if (wires.size() < numberOfControls) {
@@ -499,6 +498,13 @@ public class QuantumCircuitService {
 						+ " control.";
 			} else {
 				returnValue = "Select an empty gate position for the " + gateType + " target.";
+			}
+		} else if (qc.getGates().size() == 0) {
+			if (gateType.equals("I")) {
+				returnValue = "Select a gate from the menu and then click on an empty gate position to add it to the circuit.";
+			} else {
+				returnValue = "Choose an empty gate position on the circuit on which to place your " + gateType
+						+ " gate or choose a different gate type.";
 			}
 		} else {
 			if (gateType.equals("I")) {
@@ -508,8 +514,11 @@ public class QuantumCircuitService {
 						+ " gate or choose a different gate type.";
 			}
 		}
-		returnValue = errorMessage + " " + returnValue;
 		errorMessage = "";
 		return returnValue;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 }

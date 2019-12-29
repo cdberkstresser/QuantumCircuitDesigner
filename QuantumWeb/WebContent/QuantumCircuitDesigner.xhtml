@@ -100,9 +100,12 @@
 			<b:remoteCommand name="setGateType" id="setGateType"
 				actionListener="#{quantumCircuitService.setGateType}"
 				parameters="gateType,value" />
-			<div style="margin-left: 14%; display: block;">
-				<b:badge style="margin-top:1em;" value="#{quantumCircuitService.statusTip}"
-					auto-update="true" />
+			<div style="margin-left: 13%; display: block;">
+				<b:badge
+					style="margin-top:1em;background-color:#550000;"
+					value="#{quantumCircuitService.errorMessage}" auto-update="true" />
+				<b:badge style="margin-top:1em;"
+					value="#{quantumCircuitService.statusTip}" auto-update="true" />
 				<b:canvas class="bound" width="1600" height="500"
 					drawing="#{quantumCircuitService.drawing}" style="width:100%;"
 					auto-update="true">
