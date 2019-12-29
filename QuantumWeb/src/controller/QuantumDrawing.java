@@ -9,9 +9,21 @@ import net.bootsfaces.component.canvas.Drawing;
  *
  */
 public final class QuantumDrawing extends Drawing {
+	private String toolTip;
+
 	@Override
 	public String getJavaScript() {
 		return super.getJavaScript()
-				+ "canvas.onclick = function() {var xOffset = canvas.offsetLeft;var yOffset = canvas.offsetTop;setClick(event.clientX-xOffset, event.clientY-yOffset,canvas.clientWidth,canvas.clientHeight, event);};";
+				+ "canvas.onclick = function() {"
+				+ " var xOffset = canvas.offsetLeft;"
+				+ " var yOffset = canvas.offsetTop;"
+				+ " setClick(event.clientX-xOffset, event.clientY-yOffset,canvas.clientWidth,canvas.clientHeight, event);" 
+				+ "};"
+				+ "canvas.title = '"+ toolTip +"';";
+		
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
 	}
 }

@@ -145,12 +145,18 @@ public class QuantumCircuitService {
 				}
 			}
 		}
+		canvas.setToolTip(gateType.equals("I") ? "" : gateType);
 		return canvas;
 	}
 
-	private void setFillStyle(String string, Drawing canvas) {
-		canvas.filledCircle(0, 0, 0, "white';ctx.strokeStyle='white");
-
+	/**
+	 * This is a bit of a hack to set the fill style color to match the theme.
+	 * 
+	 * @param string The fill style color to set the style to.
+	 * @param canvas The graphics context on which to draw the object.
+	 */
+	private void setFillStyle(final String string, final Drawing canvas) {
+		canvas.filledCircle(0, 0, 0, string + "';ctx.strokeStyle='" + string);
 	}
 
 	/**
@@ -316,20 +322,22 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setCNOTTargetDot(final int wire, final int position, final Drawing graphicsContext) {
-		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1) - 4, (wire + 1) * wireSpacing + GATE_HEIGHT / 3, "⊕",
-				"3em Arial");
-
 		/*
-		 * graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT
-		 * / 4, (wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT); // vertical
-		 * line graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 *
-		 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 4 * GATE_HEIGHT / 3,
-		 * WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4, (wire + 1) *
-		 * wireSpacing + 2 * GATE_HEIGHT / 3); // horizontal line
-		 * graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4,
-		 * (wire + 1) * wireSpacing - 10, WIRE_SEGMENT_WIDTH * (position + 1) + 7 *
-		 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10);
+		 * graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1) - 4, (wire + 1) *
+		 * wireSpacing + GATE_HEIGHT / 3, "⊕", "50px Arial");
 		 */
+
+		graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
+				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT);
+		// vertical line
+		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
+				(wire + 1) * wireSpacing - 4 * GATE_HEIGHT / 3,
+				WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
+				(wire + 1) * wireSpacing + 2 * GATE_HEIGHT / 3);
+		// horizontal line
+		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10,
+				WIRE_SEGMENT_WIDTH * (position + 1) + 7 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10);
+
 	}
 
 	/**
@@ -353,8 +361,9 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	public void setControlWire(final int wire1, final int wire2, final int position, final Drawing graphicsContext) {
-		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4, (wire1 + 1) * wireSpacing,
-				WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4, (wire2 + 1) * wireSpacing - 15);
+		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
+				(wire1 + 1) * wireSpacing - GATE_HEIGHT / 2, WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
+				(wire2 + 1) * wireSpacing - GATE_HEIGHT / 2);
 	}
 
 	/**
@@ -460,5 +469,36 @@ public class QuantumCircuitService {
 	 */
 	private void setQubitLabel(final String qubitLabel, final int wire, final Drawing graphicsContext) {
 		graphicsContext.text(0, (wire + 1) * wireSpacing, qubitLabel, FONT);
+	}
+
+	/**
+	 * @return A running status bar of instructions to the user.
+	 */
+	public String getStatusTip() {
+		if (qc.getWires().size() == 0) {
+			return "First, add qubits to your circuit from the Qubits menu";
+		} else if (qc.getGates().size() == 0) {
+			if (gateType.equals("I")) {
+				return "Select a gate from the menu and then click on an empty gate position to add it to the circuit.";
+			} else {
+				return "Choose an empty gate position on the circuit on which to place your " + gateType
+						+ " gate or choose a different gate type.";
+			}
+		} else if (gateType.startsWith("C")) {
+			int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
+			if (wires.size() < numberOfControls) {
+				return "Select an empty gate position for the " + (wires.size() == 0 ? "first" : "second")
+						+ " control.";
+			} else {
+				return "Select an empty gate position for the " + gateType + " target.";
+			}
+		} else {
+			if (gateType.equals("I")) {
+				return "I gates are just identities but can be used to remove an existing gate.";
+			} else {
+				return "Choose an empty gate position on the circuit on which to place your " + gateType
+						+ " gate or choose a different gate type.";
+			}
+		}
 	}
 }

@@ -101,8 +101,11 @@
 				actionListener="#{quantumCircuitService.setGateType}"
 				parameters="gateType,value" />
 			<div style="margin-left: 14%; display: block;">
+				<b:badge style="margin-top:1em;" value="#{quantumCircuitService.statusTip}"
+					auto-update="true" />
 				<b:canvas class="bound" width="1600" height="500"
-					drawing="#{quantumCircuitService.drawing}" style="width:100%;">
+					drawing="#{quantumCircuitService.drawing}" style="width:100%;"
+					auto-update="true">
 				</b:canvas>
 				<b:remoteCommand name="setClick" id="setClick"
 					actionListener="#{quantumCircuitService.handleCanvasClick}"
