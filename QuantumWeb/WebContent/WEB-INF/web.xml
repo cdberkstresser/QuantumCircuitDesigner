@@ -18,7 +18,10 @@
 	</servlet-mapping>
 	<context-param>
 		<param-name>BootsFaces_USETHEME</param-name>
-		<param-value>default</param-value>
+		<param-value>true</param-value>
+	</context-param><context-param>
+		<param-name>BootsFaces_THEME</param-name>
+		<param-value>darkly</param-value>
 	</context-param>
 	<context-param>
 		<param-name>net.bootsfaces.get_datatable_from_cdn</param-name>

@@ -29,6 +29,8 @@ import net.bootsfaces.component.canvas.Drawing;
 public class QuantumCircuitService {
 	/** font. */
 	public static final String FONT = "2em Arial";
+	/** font color. */
+	public static final String FONT_COLOR = "white";
 	/** height and width of the gates. */
 	public static final int GATE_HEIGHT = 25;
 	/** height of canvas. */
@@ -95,6 +97,7 @@ public class QuantumCircuitService {
 	 */
 	public QuantumDrawing getDrawing() {
 		QuantumDrawing canvas = new QuantumDrawing();
+		setFillStyle("white", canvas);
 		if (qc != null && qc.getWires().size() > 0) {
 			for (int wire = 0; wire < qc.getWires().size(); ++wire) {
 				setQubitLabel(qc.getWires().get(wire).getStart().toString(), wire, canvas);
@@ -143,6 +146,11 @@ public class QuantumCircuitService {
 			}
 		}
 		return canvas;
+	}
+
+	private void setFillStyle(String string, Drawing canvas) {
+		canvas.filledCircle(0, 0, 0, "white");
+
 	}
 
 	/**
@@ -308,9 +316,10 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setCNOTTargetDot(final int wire, final int position, final Drawing graphicsContext) {
-		// graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) *
-		// wireSpacing, " ⊕", FONT);
+		 graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1)-4, (wire + 1) *
+		 wireSpacing, "⊕", "3em Arial");
 
+		 /*
 		graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
 				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT);
 		// vertical line
@@ -321,7 +330,7 @@ public class QuantumCircuitService {
 		// horizontal line
 		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10,
 				WIRE_SEGMENT_WIDTH * (position + 1) + 7 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10);
-
+*/
 	}
 
 	/**
@@ -333,7 +342,7 @@ public class QuantumCircuitService {
 	 */
 	private void setControlDot(final int wire, final int position, final Drawing graphicsContext) {
 		graphicsContext.filledCircle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT / 3, "black");
+				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT / 3, FONT_COLOR);
 	}
 
 	/**
