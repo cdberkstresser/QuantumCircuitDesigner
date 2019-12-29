@@ -149,7 +149,7 @@ public class QuantumCircuitService {
 	}
 
 	private void setFillStyle(String string, Drawing canvas) {
-		canvas.filledCircle(0, 0, 0, "white");
+		canvas.filledCircle(0, 0, 0, "white';ctx.strokeStyle='white");
 
 	}
 
@@ -316,21 +316,20 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setCNOTTargetDot(final int wire, final int position, final Drawing graphicsContext) {
-		 graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1)-4, (wire + 1) *
-		 wireSpacing, "⊕", "3em Arial");
+		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1) - 4, (wire + 1) * wireSpacing + GATE_HEIGHT / 3, "⊕",
+				"3em Arial");
 
-		 /*
-		graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT);
-		// vertical line
-		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing - 4 * GATE_HEIGHT / 3,
-				WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing + 2 * GATE_HEIGHT / 3);
-		// horizontal line
-		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10,
-				WIRE_SEGMENT_WIDTH * (position + 1) + 7 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10);
-*/
+		/*
+		 * graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT
+		 * / 4, (wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT); // vertical
+		 * line graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 *
+		 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 4 * GATE_HEIGHT / 3,
+		 * WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4, (wire + 1) *
+		 * wireSpacing + 2 * GATE_HEIGHT / 3); // horizontal line
+		 * graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4,
+		 * (wire + 1) * wireSpacing - 10, WIRE_SEGMENT_WIDTH * (position + 1) + 7 *
+		 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10);
+		 */
 	}
 
 	/**
