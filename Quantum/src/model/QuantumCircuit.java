@@ -213,6 +213,27 @@ public class QuantumCircuit implements Serializable {
 	}
 
 	/**
+	 * Algorithm to decide if two gates collide.
+	 * 
+	 * @param gate1 The first gate to check if it collides with gate2.
+	 * @param gate2 The second gate to check if it collides with gate1.
+	 * @return True if the gates collide or take competing positions.
+	 */
+	public boolean gatesCollide(final QuantumGate gate1, final QuantumGate gate2) {
+		if (gate1.getGatePosition() == gate2.getGatePosition()) {
+			int gate1MinWire = gate1.getWires().stream().min(Comparator.naturalOrder()).get();
+			int gate1MaxWire = gate1.getWires().stream().max(Comparator.naturalOrder()).get();
+			int gate2MinWire = gate2.getWires().stream().min(Comparator.naturalOrder()).get();
+			int gate2MaxWire = gate2.getWires().stream().max(Comparator.naturalOrder()).get();
+
+			if (gate1MaxWire >= gate2MinWire && gate2MaxWire >= gate1MinWire) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Sets a gate to the circuit. Will remove any conflicting gates at that
 	 * position.
 	 * 
@@ -223,7 +244,9 @@ public class QuantumCircuit implements Serializable {
 		for (int state = gate.getGatePosition(); state <= maxStateCached; ++state) {
 			stateTransposeCache.remove(state);
 		}
-		gates.removeIf(x -> x.getGatePosition() == gate.getGatePosition() && x.getWires().containsAll(gate.getWires()));
+
+		gates.removeIf(x -> gatesCollide(x, gate));
+
 		try {
 			gate.getGateMatrix();
 			if (!gate.getGateType().equals("I") && gate.getGatePosition() < getMaxWireGatePosition() + 2) {
