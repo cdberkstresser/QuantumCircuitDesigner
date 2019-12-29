@@ -64,6 +64,8 @@ public class QuantumCircuitService {
 	private List<Integer> wires = new ArrayList<>();
 	/** The vertical spacing between wires depending on how many wires there are. */
 	private int wireSpacing;
+	/** A running error message for output to the user. */
+	private String errorMessage = "";
 
 	/**
 	 * Set up with a new quantum circuit.
@@ -241,11 +243,16 @@ public class QuantumCircuitService {
 					qc.setGate(new SingleQuantumGateWithParameter(gateType, parameterValue, gatePosition,
 							Arrays.asList(wire)));
 				} else if (ControlledQuantumGate.getGateTypes().contains(gateType)) {
-					int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
-					wires.add(wire);
-					if (wires.size() > numberOfControls) {
-						qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
+					try {
+						int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
+						wires.add(wire);
+						if (wires.size() > numberOfControls) {
+							qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
+							wires.clear();
+						}
+					} catch (UnsupportedOperationException error) {
 						wires.clear();
+						errorMessage = "That particular gate configuration is not supported.";
 					}
 
 				}
@@ -475,30 +482,34 @@ public class QuantumCircuitService {
 	 * @return A running status bar of instructions to the user.
 	 */
 	public String getStatusTip() {
+		String returnValue;
 		if (qc.getWires().size() == 0) {
-			return "First, add qubits to your circuit from the Qubits menu";
+			returnValue = "First, add qubits to your circuit from the Qubits menu";
 		} else if (qc.getGates().size() == 0) {
 			if (gateType.equals("I")) {
-				return "Select a gate from the menu and then click on an empty gate position to add it to the circuit.";
+				returnValue = "Select a gate from the menu and then click on an empty gate position to add it to the circuit.";
 			} else {
-				return "Choose an empty gate position on the circuit on which to place your " + gateType
+				returnValue = "Choose an empty gate position on the circuit on which to place your " + gateType
 						+ " gate or choose a different gate type.";
 			}
 		} else if (gateType.startsWith("C")) {
 			int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
 			if (wires.size() < numberOfControls) {
-				return "Select an empty gate position for the " + (wires.size() == 0 ? "first" : "second")
+				returnValue = "Select an empty gate position for the " + (wires.size() == 0 ? "first" : "second")
 						+ " control.";
 			} else {
-				return "Select an empty gate position for the " + gateType + " target.";
+				returnValue = "Select an empty gate position for the " + gateType + " target.";
 			}
 		} else {
 			if (gateType.equals("I")) {
-				return "I gates are just identities but can be used to remove an existing gate.";
+				returnValue = "I gates are just identities but can be used to remove an existing gate.";
 			} else {
-				return "Choose an empty gate position on the circuit on which to place your " + gateType
+				returnValue = "Choose an empty gate position on the circuit on which to place your " + gateType
 						+ " gate or choose a different gate type.";
 			}
 		}
+		returnValue = errorMessage + " " + returnValue;
+		errorMessage = "";
+		return returnValue;
 	}
 }
