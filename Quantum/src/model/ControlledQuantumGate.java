@@ -63,117 +63,187 @@ public class ControlledQuantumGate implements QuantumGate {
 	public Complex[][] getGateMatrix() {
 		switch (gateType) {
 		case "CNOT":
-			if (wires.get(0) == wires.get(1) - 1) {
-				return new Complex[][] { { new Complex(1), new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(1), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0) } };
-			} else if (wires.get(0) == wires.get(1) + 1) {
-				return new Complex[][] { { new Complex(1), new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0) },
-						{ new Complex(0), new Complex(1), new Complex(0), new Complex(0) } };
-			} else if (wires.get(0) == wires.get(1) - 2) {
-				return new Complex[][] {
-						{ new Complex(1), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(1), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(1), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(1),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(1) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(1), new Complex(0) },
-
-				};
+			if (wires.get(0) < wires.get(1)) { // control above the target
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row < size / 2 || col < size / 2) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						}
+					}
+				}
+				return returnGate;
+			} else if (wires.get(0) > wires.get(1)) { // control below the target
+				int size = (int) Math.pow(2, wires.get(0) - wires.get(1) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						if (row == col) { // diagonal
+							if (row % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else if (Math.abs(row - col) == size / 2 && row % 2 == 1) {
+							returnGate[row][col] = new Complex(1);
+						} else {
+							returnGate[row][col] = new Complex(0);
+						}
+					}
+				}
+				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		case "C0NOT":
-			if (wires.get(0) == wires.get(1) - 1) {
-				return new Complex[][] { { new Complex(0), new Complex(1), new Complex(0), new Complex(0) },
-						{ new Complex(1), new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1) } };
+			if (wires.get(0) < wires.get(1)) { // control above the target
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row >= size / 2 || col >= size / 2) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						}
+					}
+				}
+				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		case "CCNOT":
-			if (Math.abs(wires.get(0) - wires.get(1)) == 1
-					&& Math.max(wires.get(0), wires.get(1)) == wires.get(2) - 1) {
-				return new Complex[][] {
-						{ new Complex(1), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(1), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(1),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(1), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(1) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(1), new Complex(0) },
-
-				};
+			if (Math.abs(wires.get(0) - wires.get(1)) == 1 && wires.get(2) > Math.max(wires.get(0), wires.get(1))) {
+				int size = (int) Math.pow(2, wires.get(2) - Math.min(wires.get(0), wires.get(1)) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row < size * 3 / 4 || col < size * 3 / 4) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						}
+					}
+				}
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		case "CC00NOT":
-			if (Math.abs(wires.get(0) - wires.get(1)) == 1
-					&& Math.max(wires.get(0), wires.get(1)) == wires.get(2) - 1) {
-				return new Complex[][] {
-						{ new Complex(0), new Complex(1), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(1), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(1),
-								new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(1), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(1), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(0), new Complex(0),
-								new Complex(0), new Complex(0), new Complex(1) },
-
-				};
+			if (Math.abs(wires.get(0) - wires.get(1)) == 1 && wires.get(2) > Math.max(wires.get(0), wires.get(1))) {
+				int size = (int) Math.pow(2, wires.get(2) - Math.min(wires.get(0), wires.get(1)) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row >= size / 4 || col >= size / 4) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						}
+					}
+				}
+				for (Complex[] c : returnGate) {
+					System.out.println(Arrays.toString(c));
+				}
+				System.out.println();
+				System.out.println();
+				return returnGate;
 			}
+
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		case "CH":
-			if (wires.get(0) == wires.get(1) - 1) {
-				return new Complex[][] { { new Complex(1), new Complex(0), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(1), new Complex(0), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(1 / Math.sqrt(2)),
-								new Complex(1 / Math.sqrt(2)) },
-						{ new Complex(0), new Complex(0), new Complex(1 / Math.sqrt(2)),
-								new Complex(-1 / Math.sqrt(2)) },
-
-				};
+			if (wires.get(0) < wires.get(1)) {
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row < size / 2 || col < size / 2) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+							} else if (row == col) {
+								if (row % 2 == 0) {
+									returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+								} else {
+									returnGate[row][col] = new Complex(-1 / Math.sqrt(2));
+								}
+							} else
+								returnGate[row][col] = new Complex(0);
+						}
+					}
+				}
+				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		case "C0H":
-			if (wires.get(0) == wires.get(1) - 1) {
-				return new Complex[][] {
-						{ new Complex(1 / Math.sqrt(2)), new Complex(1 / Math.sqrt(2)), new Complex(0),
-								new Complex(0) },
-						{ new Complex(1 / Math.sqrt(2)), new Complex(-1 / Math.sqrt(2)), new Complex(0),
-								new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(1), new Complex(0) },
-						{ new Complex(0), new Complex(0), new Complex(0), new Complex(1) },
-
-				};
+			if (wires.get(0) < wires.get(1)) {
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row >= size / 2 || col >= size / 2) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+							} else if (row == col) {
+								if (row % 2 == 0) {
+									returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+								} else {
+									returnGate[row][col] = new Complex(-1 / Math.sqrt(2));
+								}
+							} else
+								returnGate[row][col] = new Complex(0);
+						}
+					}
+				}
+				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		default:

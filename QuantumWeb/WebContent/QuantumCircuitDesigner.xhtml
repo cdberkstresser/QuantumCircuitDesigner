@@ -11,7 +11,6 @@
 	<script src="js/datatables.min.js"></script>
 </h:head>
 <h:body>
-
 	<h:form enctype="multipart/form-data">
 		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true">
 			<b:navbarLinks>
@@ -28,19 +27,29 @@
 						action="#{quantumCircuitService.getCircuitAsFile()}"></b:navCommandLink>
 				</b:dropMenu>
 				<b:dropMenu value="Samples">
-					<b:navCommandLink value="CNOT"
-						action="#{quantumCircuitService.setCircuit('CNOT')}">
+					<b:navCommandLink value="Plus State (|+)>"
+						action="#{quantumCircuitService.setCircuit('Plus State')}">
 					</b:navCommandLink>
-					<b:navCommandLink value="CCNOT"
-						action="#{quantumCircuitService.setCircuit('CCNOT')}">
+					<b:navCommandLink value="Minus State (|-)>"
+						action="#{quantumCircuitService.setCircuit('Minus State')}">
 					</b:navCommandLink>
 					<b:navCommandLink value="SWAP"
 						action="#{quantumCircuitService.setCircuit('SWAP')}">
 					</b:navCommandLink>
-
-					<b:navCommandLink value="Bell State"
-						action="#{quantumCircuitService.setCircuit('Bell State')}">
-					</b:navCommandLink>
+					<b:dropMenu value="Bell States">
+						<b:navCommandLink value="Bell State 0  |Φ⁺⟩"
+							action="#{quantumCircuitService.setCircuit('Bell State 0')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="Bell State 1  |Φ⁻⟩"
+							action="#{quantumCircuitService.setCircuit('Bell State 1')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="Bell State 2  |Ψ⁺⟩"
+							action="#{quantumCircuitService.setCircuit('Bell State 2')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="Bell State 3  |Ψ⁻⟩"
+							action="#{quantumCircuitService.setCircuit('Bell State 3')}">
+						</b:navCommandLink>
+					</b:dropMenu>
 					<b:navCommandLink value="GHZ State"
 						action="#{quantumCircuitService.setCircuit('GHZ State')}">
 					</b:navCommandLink>
@@ -101,8 +110,7 @@
 				actionListener="#{quantumCircuitService.setGateType}"
 				parameters="gateType,value" />
 			<div style="margin-left: 13%; display: block;">
-				<b:badge
-					style="margin-top:1em;background-color:#550000;"
+				<b:badge style="margin-top:1em;background-color:#550000;"
 					value="#{quantumCircuitService.errorMessage}" auto-update="true" />
 				<b:badge style="margin-top:1em;"
 					value="#{quantumCircuitService.statusTip}" auto-update="true" />

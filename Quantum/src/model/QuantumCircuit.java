@@ -67,7 +67,7 @@ public class QuantumCircuit implements Serializable {
 	/** The list of quantum wires associated with this circuit. */
 	private List<QuantumWire> wires = new ArrayList<>();
 
-	private Map<Integer, List<Complex>> stateTransposeCache = new HashMap<>();
+	private transient Map<Integer, List<Complex>> stateTransposeCache = new HashMap<>();
 
 	/**
 	 * Adds a wire to the circuit.
