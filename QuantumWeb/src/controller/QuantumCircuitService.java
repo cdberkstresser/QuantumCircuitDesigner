@@ -19,6 +19,7 @@ import javax.servlet.http.Part;
 
 import model.Complex;
 import model.ControlledQuantumGate;
+import model.ControlledQuantumGateWithParameter;
 import model.QuantumCircuit;
 import model.SingleQuantumGate;
 import model.SingleQuantumGateWithParameter;
@@ -146,6 +147,28 @@ public class QuantumCircuitService {
 										position, canvas);
 
 							}
+						} else if (ControlledQuantumGateWithParameter.getGateTypes().contains(gateType)) {
+							int targetWire = qc.getGate(wire, position).getWires()
+									.get(qc.getGate(wire, position).getWires().size() - 1);
+							// if control bit
+							if (targetWire != wire) {
+								setControlDot(wire, position, canvas);
+								if (qc.getGate(wire, position).getGateType().contains("0")) {
+									setGateSublabel("(On 0)", wire, position, canvas);
+								}
+							} else { // if not control bit
+								setGateLabel(gateType.replace("C", "").replace("0", ""), wire, position, canvas);
+								String gateTypeSublabel = "("
+										+ ((ControlledQuantumGateWithParameter) qc.getGate(wire, position)).getValue()
+										+ ")";
+								setGateSublabel(gateTypeSublabel, wire, position, canvas);
+								setControlWire(
+										qc.getGate(wire, position).getWires().stream().min(Comparator.naturalOrder())
+												.get(),
+										qc.getGate(wire, position).getWires().stream().max(Comparator.naturalOrder())
+												.get(),
+										position, canvas);
+							}
 						}
 					}
 				}
@@ -260,6 +283,21 @@ public class QuantumCircuitService {
 						errorMessage = "That particular gate configuration is not supported!";
 					}
 
+				} else if (ControlledQuantumGateWithParameter.getGateTypes().contains(gateType)) {
+					try {
+						int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
+						wires.add(wire);
+						this.position = gatePosition;
+						if (wires.size() > numberOfControls) {
+							qc.setGate(new ControlledQuantumGateWithParameter(gateType, parameterValue, gatePosition,
+									new ArrayList<>(wires)));
+							wires.clear();
+						}
+					} catch (UnsupportedOperationException error) {
+						wires.clear();
+						errorMessage = "That particular gate configuration is not supported!";
+					}
+
 				}
 			}
 		}
@@ -330,8 +368,8 @@ public class QuantumCircuitService {
 		case "GHZ State":
 			setNumberOfQubits(8);
 			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
-			for (int position=1;position<8;++position) {
-				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));	
+			for (int position = 1; position < 8; ++position) {
+				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "W State":

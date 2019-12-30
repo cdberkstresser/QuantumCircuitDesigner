@@ -12,7 +12,7 @@ import java.util.List;
  * @author cdberkstresser
  *
  */
-public class SingleQuantumGateWithParameter implements QuantumGate {
+public class SingleQuantumGateWithParameter implements QuantumGateWithParameter {
 	/** Serializable ID. */
 	private static final long serialVersionUID = -7753721998037365439L;
 	/** List of gates supported by this class. */

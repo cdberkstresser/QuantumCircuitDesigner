@@ -61,8 +61,17 @@
     	    	        <RadioMenuItem mnemonicParsing="false" text="CH" toggleGroup="$tgGates" />
     	    	        <RadioMenuItem mnemonicParsing="false" text="C0H" toggleGroup="$tgGates" />
     	    	        <SeparatorMenuItem mnemonicParsing="false" />
+						<RadioMenuItem mnemonicParsing="false" text="CRx" toggleGroup="$tgGates" />
+						<RadioMenuItem mnemonicParsing="false" text="C0Rx" toggleGroup="$tgGates" />
+	    	            <RadioMenuItem mnemonicParsing="false" text="CRy" toggleGroup="$tgGates" />
+	    	            <RadioMenuItem mnemonicParsing="false" text="C0Ry" toggleGroup="$tgGates" />
+    	    	        <RadioMenuItem mnemonicParsing="false" text="CRz" toggleGroup="$tgGates" />
+    	    	        <RadioMenuItem mnemonicParsing="false" text="C0Rz" toggleGroup="$tgGates" />
+						<SeparatorMenuItem mnemonicParsing="false" />
     	    	        <RadioMenuItem mnemonicParsing="false" text="CCNOT" toggleGroup="$tgGates" />
     	    	        <RadioMenuItem mnemonicParsing="false" text="CC00NOT" toggleGroup="$tgGates" />
+    	    	        <RadioMenuItem mnemonicParsing="false" text="CCH" toggleGroup="$tgGates" />
+    	    	        <RadioMenuItem mnemonicParsing="false" text="CC00H" toggleGroup="$tgGates" />
 					</items>
 				</Menu>
 			</menus>

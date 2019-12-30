@@ -30,6 +30,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.Complex;
 import model.ControlledQuantumGate;
+import model.ControlledQuantumGateWithParameter;
 import model.QuantumCircuit;
 import model.QuantumWire;
 import model.SingleQuantumGate;
@@ -127,6 +128,30 @@ public final class CanvasController {
 										position);
 
 							}
+						} else if (ControlledQuantumGateWithParameter.getGateTypes().contains(gateType)) {
+							int targetWire = qc.getGate(wire, position).getWires()
+									.get(qc.getGate(wire, position).getWires().size() - 1);
+							// if control bit
+							if (targetWire != wire) {
+								graphicsContext.setControlDot(wire, position);
+								if (qc.getGate(wire, position).getGateType().contains("0")) {
+									graphicsContext.setGateSublabel("(On 0)", wire, position);
+								}
+							} else { // if not control bit
+								graphicsContext.setGateLabel(gateType.replace("C", "").replace("0", ""), wire,
+										position);
+								String gateTypeSublabel = "("
+										+ ((ControlledQuantumGateWithParameter) qc.getGate(wire, position)).getValue()
+										+ ")";
+								graphicsContext.setGateSublabel(gateTypeSublabel, wire, position);
+								graphicsContext.setControlWire(
+										qc.getGate(wire, position).getWires().stream().min(Comparator.naturalOrder())
+												.get(),
+										qc.getGate(wire, position).getWires().stream().max(Comparator.naturalOrder())
+												.get(),
+										position);
+
+							}
 						}
 					}
 				}
@@ -170,6 +195,20 @@ public final class CanvasController {
 						wires.add(wire);
 						if (wires.size() > numberOfControls) {
 							qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
+							wires.clear();
+						}
+					} else if (ControlledQuantumGateWithParameter.getGateTypes().contains(gateType)) {
+						int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
+						wires.add(wire);
+						if (wires.size() > numberOfControls) {
+							TextInputDialog angleDialog = new TextInputDialog();
+							angleDialog.setTitle("Angle of Rotation");
+							// angleDialog.setText("Angle of Rotation");
+							angleDialog
+									.setHeaderText("Please enter the angle of the rotation in radians as a decimal.");
+							Optional<String> theta = angleDialog.showAndWait();
+							qc.setGate(new ControlledQuantumGateWithParameter(gateType, Double.parseDouble(theta.get()),
+									gatePosition, new ArrayList<>(wires)));
 							wires.clear();
 						}
 

@@ -12,12 +12,11 @@ import java.util.List;
  * @author cdberkstresser
  *
  */
-public class ControlledQuantumGate implements QuantumGate {
+public class ControlledQuantumGateWithParameter implements QuantumGateWithParameter {
 	/** Serializable ID. */
 	private static final long serialVersionUID = 746505294177134097L;
 	/** List of gates supported by this class. */
-	private static List<String> gateTypes = new ArrayList<>(
-			Arrays.asList("CNOT", "C0NOT", "CCNOT", "CC00NOT", "CH", "C0H", "CCH", "CC00H"));
+	private static List<String> gateTypes = new ArrayList<>(Arrays.asList("CRx", "CRy", "CRz", "C0Rx", "C0Ry", "C0Rz"));
 	/** The gate type as a string. Should be filtered through the list above. */
 	private String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
@@ -27,18 +26,25 @@ public class ControlledQuantumGate implements QuantumGate {
 	 * controls.
 	 */
 	private List<Integer> wires;
+	/**
+	 * The value associated with this quantum gate.
+	 */
+	private double value;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param type         The type of circuit.
+	 * @param value        The value required for this gate type.
 	 * @param gatePosition The horizontal position of the gate in the circuit. Zero
 	 *                     based.
 	 * @param wires        The wires involved in this gate.
 	 */
-	public ControlledQuantumGate(final String type, final int gatePosition, final List<Integer> wires) {
+	public ControlledQuantumGateWithParameter(final String type, final double value, final int gatePosition,
+			final List<Integer> wires) {
 		if (gateTypes.contains(type)) {
 			gateType = type;
+			this.value = value;
 			this.gatePosition = gatePosition;
 			this.wires = wires;
 		} else {
@@ -51,8 +57,8 @@ public class ControlledQuantumGate implements QuantumGate {
 	 * wires.
 	 */
 	@Override
-	public ControlledQuantumGate clone() {
-		return new ControlledQuantumGate(gateType, gatePosition, wires);
+	public ControlledQuantumGateWithParameter clone() {
+		return new ControlledQuantumGateWithParameter(gateType, value, gatePosition, wires);
 	}
 
 	/**
@@ -62,127 +68,7 @@ public class ControlledQuantumGate implements QuantumGate {
 	@Override
 	public Complex[][] getGateMatrix() {
 		switch (gateType) {
-		case "CNOT":
-			if (wires.get(0) < wires.get(1)) { // control above the target
-				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
-				Complex[][] returnGate = new Complex[size][size];
-				for (int row = 0; row < size; ++row) {
-					for (int col = 0; col < size; ++col) {
-						// build the diagonal on 3/4 of the grid.
-						if (row < size / 2 || col < size / 2) {
-							if (row == col) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						}
-					}
-				}
-				return returnGate;
-			} else if (wires.get(0) > wires.get(1)) { // control below the target
-				int size = (int) Math.pow(2, wires.get(0) - wires.get(1) + 1);
-				Complex[][] returnGate = new Complex[size][size];
-				for (int row = 0; row < size; ++row) {
-					for (int col = 0; col < size; ++col) {
-						if (row == col) { // diagonal
-							if (row % 2 == 0) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						} else if (Math.abs(row - col) == size / 2 && row % 2 == 1) {
-							returnGate[row][col] = new Complex(1);
-						} else {
-							returnGate[row][col] = new Complex(0);
-						}
-					}
-				}
-				return returnGate;
-			}
-			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "C0NOT":
-			if (wires.get(0) < wires.get(1)) { // control above the target
-				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
-				Complex[][] returnGate = new Complex[size][size];
-				for (int row = 0; row < size; ++row) {
-					for (int col = 0; col < size; ++col) {
-						// build the diagonal on 3/4 of the grid.
-						if (row >= size / 2 || col >= size / 2) {
-							if (row == col) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						}
-					}
-				}
-				return returnGate;
-			}
-			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "CCNOT":
-			if (Math.abs(wires.get(0) - wires.get(1)) == 1 && wires.get(2) > Math.max(wires.get(0), wires.get(1))) {
-				int size = (int) Math.pow(2, wires.get(2) - Math.min(wires.get(0), wires.get(1)) + 1);
-				Complex[][] returnGate = new Complex[size][size];
-				for (int row = 0; row < size; ++row) {
-					for (int col = 0; col < size; ++col) {
-						// build the diagonal on 3/4 of the grid.
-						if (row < size * 3 / 4 || col < size * 3 / 4) {
-							if (row == col) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						}
-					}
-				}
-				return returnGate;
-			}
-			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "CC00NOT":
-			if (Math.abs(wires.get(0) - wires.get(1)) == 1 && wires.get(2) > Math.max(wires.get(0), wires.get(1))) {
-				int size = (int) Math.pow(2, wires.get(2) - Math.min(wires.get(0), wires.get(1)) + 1);
-				Complex[][] returnGate = new Complex[size][size];
-				for (int row = 0; row < size; ++row) {
-					for (int col = 0; col < size; ++col) {
-						// build the diagonal on 3/4 of the grid.
-						if (row >= size / 4 || col >= size / 4) {
-							if (row == col) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1);
-							} else {
-								returnGate[row][col] = new Complex(0);
-							}
-						}
-					}
-				}
-				return returnGate;
-			}
-
-			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "CH":
+		case "CRx":
 			if (wires.get(0) < wires.get(1)) {
 				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
 				Complex[][] returnGate = new Complex[size][size];
@@ -197,12 +83,62 @@ public class ControlledQuantumGate implements QuantumGate {
 							}
 						} else {
 							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+								returnGate[row][col] = new Complex(0, -Math.sin(value / 2));
 							} else if (row == col) {
+								returnGate[row][col] = new Complex(Math.cos(value / 2));
+							} else
+								returnGate[row][col] = new Complex(0);
+						}
+					}
+				}
+				return returnGate;
+			}
+			throw new UnsupportedOperationException("Gate not implemented yet!");
+		case "CRy":
+			if (wires.get(0) < wires.get(1)) {
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row < size / 2 || col < size / 2) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(-Math.sin(value / 2));
+							} else if (row == col) {
+								returnGate[row][col] = new Complex(Math.cos(value / 2));
+							} else
+								returnGate[row][col] = new Complex(0);
+						}
+					}
+				}
+				return returnGate;
+			}
+			throw new UnsupportedOperationException("Gate not implemented yet!");
+		case "CRz":
+			if (wires.get(0) < wires.get(1)) {
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row < size / 2 || col < size / 2) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (row == col) {
 								if (row % 2 == 0) {
-									returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+									returnGate[row][col] = new Complex(Math.cos(value / 2), -Math.sin(value / 2));
 								} else {
-									returnGate[row][col] = new Complex(-1 / Math.sqrt(2));
+									returnGate[row][col] = new Complex(Math.cos(value / 2), Math.sin(value / 2));
 								}
 							} else
 								returnGate[row][col] = new Complex(0);
@@ -212,7 +148,7 @@ public class ControlledQuantumGate implements QuantumGate {
 				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "C0H":
+		case "C0Rx":
 			if (wires.get(0) < wires.get(1)) {
 				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
 				Complex[][] returnGate = new Complex[size][size];
@@ -227,13 +163,9 @@ public class ControlledQuantumGate implements QuantumGate {
 							}
 						} else {
 							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+								returnGate[row][col] = new Complex(0, -Math.sin(value / 2));
 							} else if (row == col) {
-								if (row % 2 == 0) {
-									returnGate[row][col] = new Complex(1 / Math.sqrt(2));
-								} else {
-									returnGate[row][col] = new Complex(-1 / Math.sqrt(2));
-								}
+								returnGate[row][col] = new Complex(Math.cos(value / 2));
 							} else
 								returnGate[row][col] = new Complex(0);
 						}
@@ -242,14 +174,14 @@ public class ControlledQuantumGate implements QuantumGate {
 				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "CCH":
-			if (Math.abs(wires.get(0) - wires.get(1)) == 1 && wires.get(2) > Math.max(wires.get(0), wires.get(1))) {
-				int size = (int) Math.pow(2, wires.get(2) - Math.min(wires.get(0), wires.get(1)) + 1);
+		case "C0Ry":
+			if (wires.get(0) < wires.get(1)) {
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
 				Complex[][] returnGate = new Complex[size][size];
 				for (int row = 0; row < size; ++row) {
 					for (int col = 0; col < size; ++col) {
 						// build the diagonal on 3/4 of the grid.
-						if (row < size * 3 / 4 || col < size * 3 / 4) {
+						if (row >= size / 2 || col >= size / 2) {
 							if (row == col) {
 								returnGate[row][col] = new Complex(1);
 							} else {
@@ -257,43 +189,39 @@ public class ControlledQuantumGate implements QuantumGate {
 							}
 						} else {
 							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1 / Math.sqrt(2));
-							} else {
-								if (row % 2 == 0) {
-									returnGate[row][col] = new Complex(1 / Math.sqrt(2));
-								} else {
-									returnGate[row][col] = new Complex(-1 / Math.sqrt(2));
-								}
-							}
+								returnGate[row][col] = new Complex(-Math.sin(value / 2));
+							} else if (row == col) {
+								returnGate[row][col] = new Complex(Math.cos(value / 2));
+							} else
+								returnGate[row][col] = new Complex(0);
 						}
 					}
 				}
 				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
-		case "CC00H":
-			if (Math.abs(wires.get(0) - wires.get(1)) == 1 && wires.get(2) > Math.max(wires.get(0), wires.get(1))) {
-				int size = (int) Math.pow(2, wires.get(2) - Math.min(wires.get(0), wires.get(1)) + 1);
+		case "C0Rz":
+			if (wires.get(0) < wires.get(1)) {
+				int size = (int) Math.pow(2, wires.get(1) - wires.get(0) + 1);
 				Complex[][] returnGate = new Complex[size][size];
 				for (int row = 0; row < size; ++row) {
 					for (int col = 0; col < size; ++col) {
 						// build the diagonal on 3/4 of the grid.
-						if (row >= size / 4 || col >= size / 4) {
+						if (row >= size / 2 || col >= size / 2) {
 							if (row == col) {
 								returnGate[row][col] = new Complex(1);
 							} else {
 								returnGate[row][col] = new Complex(0);
 							}
 						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
-								returnGate[row][col] = new Complex(1 / Math.sqrt(2));
-							} else {
+							if (row == col) {
 								if (row % 2 == 0) {
-									returnGate[row][col] = new Complex(1 / Math.sqrt(2));
+									returnGate[row][col] = new Complex(Math.cos(value / 2), -Math.sin(value / 2));
 								} else {
-									returnGate[row][col] = new Complex(-1 / Math.sqrt(2));
+									returnGate[row][col] = new Complex(Math.cos(value / 2), Math.sin(value / 2));
 								}
-							}
+							} else
+								returnGate[row][col] = new Complex(0);
 						}
 					}
 				}
@@ -354,5 +282,10 @@ public class ControlledQuantumGate implements QuantumGate {
 	 */
 	public static List<String> getGateTypes() {
 		return gateTypes;
+	}
+
+	@Override
+	public double getValue() {
+		return value;
 	}
 }
