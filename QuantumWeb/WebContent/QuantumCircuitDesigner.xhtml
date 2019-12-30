@@ -14,7 +14,8 @@
 </h:head>
 <h:body>
 	<h:form enctype="multipart/form-data">
-		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true">
+		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true"
+			style="margin-bottom:0px;">
 			<b:navbarLinks>
 				<b:dropMenu value="Circuit">
 					<b:navCommandLink value="New"
@@ -142,54 +143,56 @@
 					onclick="$('.modalPseudoClass').modal()" />
 			</b:navbarLinks>
 		</b:navBar>
-		<b:label text="Gates:"></b:label>
-		<b:buttonToolbar>
-			<b:buttonGroup>
-				<b:button value="I" onclick="setGateType('I',0.0);" />
-				<b:button value="H" onclick="setGateType('H',0.0);" />
-				<b:button value="X" onclick="setGateType('X',0.0);" />
-				<b:button value="S" onclick="setGateType('S',0.0);" />
-				<b:button value="T" onclick="setGateType('T',0.0);" />
-			</b:buttonGroup>
-			<b:buttonGroup>
-				<b:button value="Rx"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rx',value);" />
-				<b:button value="Ry"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Ry',value);" />
-				<b:button value="Rz"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rz',value);" />
-			</b:buttonGroup>
-			<b:buttonGroup>
-				<b:button value="CNOT" onclick="setGateType('CNOT',0.0);" />
-				<b:button value="C0NOT" onclick="setGateType('C0NOT',0.0);" />
-				<b:button value="CH" onclick="setGateType('CH',0.0);" />
-				<b:button value="C0H" onclick="setGateType('C0H',0.0);" />
-			</b:buttonGroup>
-			<b:buttonGroup>
-				<b:button value="CRx"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('CRx',value);" />
-				<b:button value="C0Rx"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('C0Rx',value);" />
-				<b:button value="CRy"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('CRy',value);" />
-				<b:button value="C0Ry"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('C0Ry',value);" />
-				<b:button value="CRz"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('CRz',value);" />
-				<b:button value="C0Rz"
-					onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('C0Rz',value);" />
-			</b:buttonGroup>
-			<b:buttonGroup>
-				<b:button value="CCNOT" onclick="setGateType('CCNOT',0.0);" />
-				<b:button value="CC00NOT" onclick="setGateType('CC00NOT',0.0);" />
-				<b:button value="CCH" onclick="setGateType('CCH',0.0);" />
-				<b:button value="CC00H" onclick="setGateType('CC00H',0.0);" />
-			</b:buttonGroup>
-			<b:buttonGroup>
-				<b:button value="CCCNOT" onclick="setGateType('CCCNOT',0.0);" />
-				<b:button value="CCC000NOT" onclick="setGateType('CCC000NOT',0.0);" />
-			</b:buttonGroup>
-		</b:buttonToolbar>
+		<b:navBar brand="Gates" brandHref="#" fluid="true">
+			<b:navbarLinks>
+				<b:dropMenu value="Single Qubit Gates">
+					<b:navLink value="I" onclick="setGateType('I',0.0);" />
+					<b:navLink value="H" onclick="setGateType('H',0.0);" />
+					<b:navLink value="X" onclick="setGateType('X',0.0);" />
+					<b:navLink value="S" onclick="setGateType('S',0.0);" />
+					<b:navLink value="T" onclick="setGateType('T',0.0);" />
+					<b:navLink />
+					<b:navLink value="Rx"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rx',value);" />
+					<b:navLink value="Ry"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Ry',value);" />
+					<b:navLink value="Rz"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rz',value);" />
+				</b:dropMenu>
+				<b:dropMenu value="Controlled Gates">
+					<b:navLink value="CNOT" onclick="setGateType('CNOT',0.0);" />
+					<b:navLink value="CH" onclick="setGateType('CH',0.0);" />
+					<b:navLink />
+					<b:navLink value="CRx"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('CRx',value);" />
+					<b:navLink value="CRy"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('CRy',value);" />
+					<b:navLink value="CRz"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('CRz',value);" />
+					<b:navLink />
+					<b:navLink value="CCNOT" onclick="setGateType('CCNOT',0.0);" />
+					<b:navLink value="CCH" onclick="setGateType('CCH',0.0);" />
+					<b:navLink />
+					<b:navLink value="CCCNOT" onclick="setGateType('CCCNOT',0.0);" />
+				</b:dropMenu>
+				<b:dropMenu value="Controlled (on 0) Gates">
+					<b:navLink value="C0NOT" onclick="setGateType('C0NOT',0.0);" />
+					<b:navLink value="C0H" onclick="setGateType('C0H',0.0);" />
+					<b:navLink value="C0Rx"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('C0Rx',value);" />
+					<b:navLink value="C0Ry"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('C0Ry',value);" />
+					<b:navLink value="C0Rz"
+						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('C0Rz',value);" />
+					<b:navLink />
+					<b:navLink value="CC00NOT" onclick="setGateType('CC00NOT',0.0);" />
+					<b:navLink value="CC00H" onclick="setGateType('CC00H',0.0);" />
+					<b:navLink />
+					<b:navLink value="CCC000NOT"
+						onclick="setGateType('CCC000NOT',0.0);" />
+				</b:dropMenu>
+			</b:navbarLinks>
+		</b:navBar>
 		<div style="min-width: 800px;">
 			<b:remoteCommand name="setGateType" id="setGateType"
 				actionListener="#{quantumCircuitService.setGateType}"
