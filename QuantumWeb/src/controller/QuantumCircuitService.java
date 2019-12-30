@@ -287,13 +287,14 @@ public class QuantumCircuitService {
 	public void setCircuit(final String circuitType) {
 		qc = new QuantumCircuit();
 		switch (circuitType) {
-		case "CNOT":
-			setNumberOfQubits(2);
-			qc.setGate(new ControlledQuantumGate("CNOT", 0, Arrays.asList(0, 1)));
+		case "Plus State":
+			setNumberOfQubits(1);
+			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
 			break;
-		case "CCNOT":
-			setNumberOfQubits(3);
-			qc.setGate(new ControlledQuantumGate("CCNOT", 0, Arrays.asList(0, 1, 2)));
+		case "Minus State":
+			setNumberOfQubits(1);
+			qc.getWires().get(0).xStart();
+			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
 			break;
 		case "SWAP":
 			setNumberOfQubits(2);
@@ -302,16 +303,36 @@ public class QuantumCircuitService {
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(1, 0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 2, Arrays.asList(0, 1)));
 			break;
-		case "Bell State":
+		case "Bell State 0":
 			setNumberOfQubits(2);
 			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
 			break;
-		case "GHZ State":
-			setNumberOfQubits(3);
+		case "Bell State 1":
+			setNumberOfQubits(2);
+			qc.getWires().get(0).xStart();
 			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
-			qc.setGate(new ControlledQuantumGate("CNOT", 2, Arrays.asList(0, 2)));
+			break;
+		case "Bell State 2":
+			setNumberOfQubits(2);
+			qc.getWires().get(1).xStart();
+			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
+			break;
+		case "Bell State 3":
+			setNumberOfQubits(2);
+			qc.getWires().get(0).xStart();
+			qc.getWires().get(1).xStart();
+			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
+			break;
+		case "GHZ State":
+			setNumberOfQubits(8);
+			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			for (int position=1;position<8;++position) {
+				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));	
+			}
 			break;
 		case "W State":
 			setNumberOfQubits(3);
