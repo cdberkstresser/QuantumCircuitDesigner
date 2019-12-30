@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -95,6 +96,32 @@ public class QuantumCircuitService {
 		ObjectOutputStream circuitWriter = new ObjectOutputStream(output);
 		circuitWriter.writeObject(qc);
 
+		fc.responseComplete();
+	}
+
+	/**
+	 * Output the circuit as a file.
+	 * 
+	 * @throws IOException Exception if crash.
+	 */
+	public void getStateAsFile() throws IOException {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		ExternalContext ec = fc.getExternalContext();
+
+		ec.responseReset();
+		ec.setResponseContentType("application/octet-stream");
+		ec.setResponseHeader("Content-Disposition", "attachment; filename=\"states.csv\"");
+
+		OutputStream output = ec.getResponseOutputStream();
+		PrintWriter csv = new PrintWriter(output);
+		csv.println(
+				"\"Qubits\",\"State 0\",\"State 1\",\"State 2\",\"State 3\",\"State 4\",\"State 5\",\"State 6\",\"State 7\",\"State 8\"");
+		for (QuantumStateViewer qsv : getStatesTable()) {
+			csv.println("\"" + qsv.getQubits() + "\"," + qsv.getState0() + "," + qsv.getState1() + "," + qsv.getState2()
+					+ "," + qsv.getState3() + "," + qsv.getState4() + "," + qsv.getState5() + "," + qsv.getState6()
+					+ "," + qsv.getState7() + "," + qsv.getState8());
+		}
+		csv.close();
 		fc.responseComplete();
 	}
 
@@ -618,7 +645,17 @@ public class QuantumCircuitService {
 		return returnValue;
 	}
 
+	/**
+	 * @return Any error messages associated with the previous state.
+	 */
 	public String getErrorMessage() {
 		return errorMessage;
+	}
+
+	/**
+	 * @return The number of qubits in this circuit.
+	 */
+	public int getNumberOfQubits() {
+		return qc.getWires().size();
 	}
 }

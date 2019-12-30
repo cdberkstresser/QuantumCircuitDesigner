@@ -2,9 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<title>Quantum Circuit Designer</title>
 	<script src="js/jquery-3.4.1.js"></script>
@@ -96,20 +98,24 @@
 						action="#{quantumCircuitService.setNumberOfQubits(7)}"></b:navCommandLink>
 					<b:navCommandLink value="8"
 						action="#{quantumCircuitService.setNumberOfQubits(8)}"></b:navCommandLink>
+					<b:navCommandLink value="9"
+						action="#{quantumCircuitService.setNumberOfQubits(9)}"></b:navCommandLink>
+					<b:navCommandLink value="10"
+						action="#{quantumCircuitService.setNumberOfQubits(10)}"></b:navCommandLink>
 				</b:dropMenu>
 			</b:navbarLinks>
 			<b:navbarLinks pull="right">
 				<b:modal id="license" title="Terms of Use"
 					styleClass="modalPseudoClass">
 					<p>Underlying software is licensed under the Apache License,
-						Version 2.0, and usage of this web site is intended to follow the
-						same idea of the underlying software license.</p>
+						Version 2.0, and usage of this web site is designed to follow the
+						same intention of the underlying software license.</p>
 					<p>You may not use this service except in compliance with the
 						License.</p>
 					<p>
 						You may obtain a copy of the License at <a
 							href='http://www.apache.org/licenses/LICENSE-2.0' target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a><br />
-						and a copy of the source code of this website at <a
+						and a copy of the source code of this web site at <a
 							href='https://github.com/cdberkstresser/QuantumCircuitDesigner'
 							target="_blank">https://github.com/cdberkstresser/QuantumCircuitDesigner</a>
 					</p>
@@ -192,62 +198,74 @@
 					actionListener="#{quantumCircuitService.handleCanvasClick}"
 					parameters="x,y,width,height" update="@(.bound)" />
 			</div>
-			<b:tabView>
-				<b:tab title="States">
-					<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
-						pdf="true" value="#{quantumCircuitService.statesTable}" var="row"
-						style="min-width:800px;" page-length-menu="[10,64,256]">
-						<b:dataTableColumn value="#{row.qubits}" label="Qubits"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state0}" label="State 0"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state1}" label="State 1"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state2}" label="State 2"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state3}" label="State 3"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state4}" label="State 4"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state5}" label="State 5"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state6}" label="State 6"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state7}" label="State 7"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state8}" label="State 8"
-							style="width:10%" />
-
-					</b:dataTable>
-				</b:tab>
-				<b:tab title="Qubits">
-					<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
-						pdf="true" value="#{quantumCircuitService.qubitsTable}" var="row"
-						style="min-width:800px;" page-length-menu="[10,64,256]">
-						<b:dataTableColumn value="#{row.qubit}" label="Qubit"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state0}" label="State 0"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state1}" label="State 1"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state2}" label="State 2"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state3}" label="State 3"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state4}" label="State 4"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state5}" label="State 5"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state6}" label="State 6"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state7}" label="State 7"
-							style="width:10%" />
-						<b:dataTableColumn value="#{row.state8}" label="State 8"
-							style="width:10%" />
-					</b:dataTable>
-
-				</b:tab>
-			</b:tabView>
+			<c:choose>
+				<c:when test="#{quantumCircuitService.numberOfQubits lt 9}">
+					<b:tabView>
+						<b:tab title="States">
+							<b:dataTable id="qubitsTable" class="bound" excel="true"
+								csv="true" pdf="true"
+								value="#{quantumCircuitService.statesTable}" var="row"
+								style="min-width:800px;" page-length-menu="[10,64,256]">
+								<b:dataTableColumn value="#{row.qubits}" label="Qubits"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state0}" label="State 0"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state1}" label="State 1"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state2}" label="State 2"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state3}" label="State 3"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state4}" label="State 4"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state5}" label="State 5"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state6}" label="State 6"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state7}" label="State 7"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state8}" label="State 8"
+									style="width:10%" />
+							</b:dataTable>
+						</b:tab>
+						<b:tab title="Qubits">
+							<b:dataTable id="qubitsTable" class="bound" excel="true"
+								csv="true" pdf="true"
+								value="#{quantumCircuitService.qubitsTable}" var="row"
+								style="min-width:800px;" page-length-menu="[10,64,256]">
+								<b:dataTableColumn value="#{row.qubit}" label="Qubit"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state0}" label="State 0"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state1}" label="State 1"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state2}" label="State 2"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state3}" label="State 3"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state4}" label="State 4"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state5}" label="State 5"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state6}" label="State 6"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state7}" label="State 7"
+									style="width:10%" />
+								<b:dataTableColumn value="#{row.state8}" label="State 8"
+									style="width:10%" />
+							</b:dataTable>
+						</b:tab>
+					</b:tabView>
+				</c:when>
+				<c:when test="#{quantumCircuitService.numberOfQubits gt 8}">
+					<b:navBar brand="State Analysis" brandHref="#" fluid="true">
+						<b:navbarLinks>
+							<b:navCommandLink value="Download State Table"
+								action="#{quantumCircuitService.getStateAsFile()}"></b:navCommandLink>
+						</b:navbarLinks>
+					</b:navBar>
+				</c:when>
+			</c:choose>
 		</div>
 	</h:form>
 </h:body>
