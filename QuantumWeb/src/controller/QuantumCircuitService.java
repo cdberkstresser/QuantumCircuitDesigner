@@ -305,7 +305,7 @@ public class QuantumCircuitService {
 							qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
 							wires.clear();
 						}
-					} catch (UnsupportedOperationException error) {
+					} catch (UnsupportedOperationException err) {
 						wires.clear();
 						errorMessage = "That particular gate configuration is not supported!";
 					}
@@ -319,7 +319,7 @@ public class QuantumCircuitService {
 									new ArrayList<>(wires)));
 							wires.clear();
 						}
-					} catch (UnsupportedOperationException error) {
+					} catch (UnsupportedOperationException err) {
 						wires.clear();
 						errorMessage = "That particular gate configuration is not supported!";
 					}

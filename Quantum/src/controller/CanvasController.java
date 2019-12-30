@@ -32,6 +32,7 @@ import model.Complex;
 import model.ControlledQuantumGate;
 import model.ControlledQuantumGateWithParameter;
 import model.QuantumCircuit;
+import model.QuantumGate;
 import model.QuantumWire;
 import model.SingleQuantumGate;
 import model.SingleQuantumGateWithParameter;
@@ -79,31 +80,34 @@ public final class CanvasController {
 	private ToggleGroup tgGates;
 	/** a list of pending wires for controlled qubits. */
 	private List<Integer> wires = new ArrayList<>();
+	/** a pending position for controlled qubits. */
+	private int position;
 
 	/**
 	 * Draw the circuit on the canvas.
 	 */
 	private void drawCanvas() {
 		graphicsContext.clearAll();
-		if (qc.getWires().size() > 0) {
+		if (qc != null && qc.getWires().size() > 0) {
 			for (int wire = 0; wire < qc.getWires().size(); ++wire) {
-				// initial qubits
-				graphicsContext.setQubitLabel(qc.getWires().get(wire).getInitialValue().toString(), wire);
+				graphicsContext.setQubitLabel(qc.getWires().get(wire).getStart().toString(), wire);
 				for (int position = 0; position < qc.getMaxWireGatePosition() + 2; ++position) {
 					graphicsContext.setNextWireSegment(wire, position);
-					if (qc.getGate(wire, position) == null) {
+					if (position == this.position && wires.contains(wire)) {
+						graphicsContext.setControlDot(wire, position);
+					} else if (qc.getGate(wire, position) == null) {
 						graphicsContext.setEmptyGate(wire, position);
 					} else {
 						String gateType = qc.getGate(wire, position).getGateType();
 						// if single simple gate
 						if (SingleQuantumGate.getGateTypes().contains(gateType)) {
-							graphicsContext.setGateLabel("  " + qc.getGate(wire, position).getGateType(), wire,
-									position);
+							graphicsContext.setGateLabel("  " + qc.getGate(wire, position).getGateType(), wire, position);
 							// if single parameter gate
 						} else if (SingleQuantumGateWithParameter.getGateTypes().contains(gateType)) {
-							gateType += "\n(" + ((SingleQuantumGateWithParameter) qc.getGate(wire, position)).getValue()
-									+ ")";
+							String gateTypeSublabel = "("
+									+ ((SingleQuantumGateWithParameter) qc.getGate(wire, position)).getValue() + ")";
 							graphicsContext.setGateLabel(gateType, wire, position);
+							graphicsContext.setGateSublabel(gateTypeSublabel, wire, position);
 							// if controlled gate
 						} else if (ControlledQuantumGate.getGateTypes().contains(gateType)) {
 							int targetWire = qc.getGate(wire, position).getWires()
@@ -138,8 +142,7 @@ public final class CanvasController {
 									graphicsContext.setGateSublabel("(On 0)", wire, position);
 								}
 							} else { // if not control bit
-								graphicsContext.setGateLabel(gateType.replace("C", "").replace("0", ""), wire,
-										position);
+								graphicsContext.setGateLabel(gateType.replace("C", "").replace("0", ""), wire, position);
 								String gateTypeSublabel = "("
 										+ ((ControlledQuantumGateWithParameter) qc.getGate(wire, position)).getValue()
 										+ ")";
@@ -150,7 +153,6 @@ public final class CanvasController {
 										qc.getGate(wire, position).getWires().stream().max(Comparator.naturalOrder())
 												.get(),
 										position);
-
 							}
 						}
 					}
@@ -167,6 +169,7 @@ public final class CanvasController {
 	@FXML
 	void handleCanvasClick(final MouseEvent event) {
 		int wireSpacing = (int) (canvas.getHeight() / (qc.getWires().size() + 1));
+		String gateType = ((RadioMenuItem) tgGates.getSelectedToggle()).getText();
 		try {
 			if (event.getX() % WIRE_SEGMENT_WIDTH <= GATE_HEIGHT
 					&& (event.getY() - 15) % wireSpacing >= wireSpacing - GATE_HEIGHT) {
@@ -175,7 +178,6 @@ public final class CanvasController {
 				if (gatePosition == -1) { // clicked on a qubit
 					qc.getWires().get(wire).xStart();
 				} else {
-					String gateType = ((RadioMenuItem) tgGates.getSelectedToggle()).getText();
 					if (SingleQuantumGate.getGateTypes().contains(gateType)) {
 						qc.setGate(new SingleQuantumGate(gateType, gatePosition, Arrays.asList(wire)));
 					} else if (SingleQuantumGateWithParameter.getGateTypes().contains(gateType)) {
@@ -191,25 +193,49 @@ public final class CanvasController {
 
 						}
 					} else if (ControlledQuantumGate.getGateTypes().contains(gateType)) {
-						int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
-						wires.add(wire);
-						if (wires.size() > numberOfControls) {
-							qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
+						try {
+							wires.add(wire);
+							this.position = gatePosition;
+							if (wires.size() > QuantumGate.getNumberOfControls(gateType)) {
+								qc.setGate(new ControlledQuantumGate(gateType, gatePosition, new ArrayList<>(wires)));
+								wires.clear();
+							}
+						} catch (UnsupportedOperationException err) {
 							wires.clear();
+							String errorMessage = "That particular gate configuration is not supported!";
+							Alert error = new Alert(AlertType.ERROR);
+							error.setTitle("Error");
+							error.setContentText(errorMessage);
+							error.showAndWait();
 						}
+
 					} else if (ControlledQuantumGateWithParameter.getGateTypes().contains(gateType)) {
-						int numberOfControls = gateType.startsWith("CC") ? 2 : 1;
-						wires.add(wire);
-						if (wires.size() > numberOfControls) {
-							TextInputDialog angleDialog = new TextInputDialog();
-							angleDialog.setTitle("Angle of Rotation");
-							// angleDialog.setText("Angle of Rotation");
-							angleDialog
-									.setHeaderText("Please enter the angle of the rotation in radians as a decimal.");
-							Optional<String> theta = angleDialog.showAndWait();
-							qc.setGate(new ControlledQuantumGateWithParameter(gateType, Double.parseDouble(theta.get()),
-									gatePosition, new ArrayList<>(wires)));
+						try {
+							wires.add(wire);
+							this.position = gatePosition;
+							if (wires.size() > QuantumGate.getNumberOfControls(gateType)) {
+								TextInputDialog angleDialog = new TextInputDialog();
+								angleDialog.setTitle("Angle of Rotation");
+								// angleDialog.setText("Angle of Rotation");
+								angleDialog.setHeaderText(
+										"Please enter the angle of the rotation in radians as a decimal.");
+								Optional<String> theta = angleDialog.showAndWait();
+								try {
+									qc.setGate(new ControlledQuantumGateWithParameter(gateType,
+											Double.parseDouble(theta.get()), gatePosition, Arrays.asList(wire)));
+								} catch (Exception e) {
+
+								}
+
+							}
+						} catch (UnsupportedOperationException err) {
 							wires.clear();
+							String errorMessage = "That particular gate configuration is not supported!";
+							Alert error = new Alert(AlertType.ERROR);
+							error.setTitle("Error");
+							error.setContentText(errorMessage);
+							error.showAndWait();
+
 						}
 
 					}

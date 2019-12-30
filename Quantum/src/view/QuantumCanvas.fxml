@@ -38,6 +38,8 @@
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="6" />
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="7" />
 						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="8" />
+						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="9" />
+						<MenuItem mnemonicParsing="false" onAction="#handleSetQubits" text="10" />
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="Gates">
@@ -72,6 +74,9 @@
     	    	        <RadioMenuItem mnemonicParsing="false" text="CC00NOT" toggleGroup="$tgGates" />
     	    	        <RadioMenuItem mnemonicParsing="false" text="CCH" toggleGroup="$tgGates" />
     	    	        <RadioMenuItem mnemonicParsing="false" text="CC00H" toggleGroup="$tgGates" />
+    	    	        <SeparatorMenuItem mnemonicParsing="false" />
+    	    	        <RadioMenuItem mnemonicParsing="false" text="CCCNOT" toggleGroup="$tgGates" />
+    	    	        <RadioMenuItem mnemonicParsing="false" text="CCC000NOT" toggleGroup="$tgGates" />
 					</items>
 				</Menu>
 			</menus>

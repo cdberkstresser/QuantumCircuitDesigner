@@ -53,8 +53,7 @@ public class QuantumGraphicsContext {
 	 * @param position The position on the wire to draw the gate.
 	 */
 	public void setEmptyGate(final int wire, final int position) {
-		graphicsContext.strokeRoundRect(WIRE_SEGMENT_WIDTH * (position + 1),
-				(wire + 1) * wireSpacing - THREE_FIFTHS_HEIGHT - 5, GATE_HEIGHT, GATE_HEIGHT, 10, 10);
+		graphicsContext.fillText("  ☐", WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * wireSpacing);
 	}
 
 	/**
@@ -94,7 +93,7 @@ public class QuantumGraphicsContext {
 	 * @param wire       The wire on which to draw the gate.
 	 */
 	public void setQubitLabel(final String qubitLabel, final int wire) {
-		graphicsContext.strokeText(qubitLabel, 0, (wire + 1) * wireSpacing);
+		graphicsContext.fillText(qubitLabel, 0, (wire + 1) * wireSpacing);
 	}
 
 	/**
@@ -116,7 +115,7 @@ public class QuantumGraphicsContext {
 	 * @param position  The position on the wire to draw the gate.
 	 */
 	public void setGateLabel(final String gateLabel, final int wire, final int position) {
-		graphicsContext.strokeText(gateLabel, WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * wireSpacing,
+		graphicsContext.fillText(gateLabel, WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * wireSpacing,
 				WIRE_SEGMENT_WIDTH);
 	}
 
@@ -128,7 +127,7 @@ public class QuantumGraphicsContext {
 	 * @param position The position on the wire to draw the gate.
 	 */
 	public void setGateSublabel(final String subLabel, final int wire, final int position) {
-		graphicsContext.strokeText(subLabel, WIRE_SEGMENT_WIDTH * (position + 1) + GATE_HEIGHT / 4,
+		graphicsContext.fillText(subLabel, WIRE_SEGMENT_WIDTH * (position + 1) + GATE_HEIGHT / 4,
 				(wire + 1) * wireSpacing + THREE_FIFTHS_HEIGHT + GATE_HEIGHT / 4, WIRE_SEGMENT_WIDTH);
 	}
 
