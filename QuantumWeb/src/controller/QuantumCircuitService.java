@@ -2,8 +2,6 @@ package controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -67,8 +65,6 @@ public class QuantumCircuitService {
 	private List<Integer> wires = new ArrayList<>();
 	/** a pending position for the qubit controls. */
 	private int position;
-	/** The vertical spacing between wires depending on how many wires there are. */
-	private int wireSpacing;
 	/** A running error message for output to the user. */
 	private String errorMessage = "";
 
@@ -81,21 +77,21 @@ public class QuantumCircuitService {
 
 	/**
 	 * Output the circuit as a file.
-	 * 
-	 * @throws IOException Exception if crash.
 	 */
-	public void getCircuitAsFile() throws IOException {
+	public void getCircuitAsFile() {
+		// inject into stream for jsf
 		FacesContext fc = FacesContext.getCurrentInstance();
 		ExternalContext ec = fc.getExternalContext();
 
 		ec.responseReset();
-		ec.setResponseContentType("application/octet-stream");
-		ec.setResponseHeader("Content-Disposition", "attachment; filename=\"circuit.qcd\"");
+		ec.setResponseContentType("application/xml");
+		ec.setResponseHeader("Content-Disposition", "attachment; filename=\"circuit.qcdxml\"");
 
-		OutputStream output = ec.getResponseOutputStream();
-		ObjectOutputStream circuitWriter = new ObjectOutputStream(output);
-		circuitWriter.writeObject(qc);
-
+		try {
+			qc.getAsXML(ec.getResponseOutputStream());
+		} catch (Exception e) {
+			errorMessage = "File was not attainable!";
+		}
 		fc.responseComplete();
 	}
 
@@ -288,9 +284,9 @@ public class QuantumCircuitService {
 
 		int x = (int) (rawX * WIDTH / width);
 		int y = (int) (rawY * WIDTH / width);
-		if ((x + 5) % WIRE_SEGMENT_WIDTH <= 2 * GATE_HEIGHT && (y + 34) % wireSpacing <= 2 * GATE_HEIGHT) {
+		if ((x + 5) % WIRE_SEGMENT_WIDTH <= 2 * GATE_HEIGHT && (y + 34) % getWireSpacing() <= 2 * GATE_HEIGHT) {
 			int gatePosition = (int) ((x + 5) / WIRE_SEGMENT_WIDTH) - 1;
-			int wire = (int) ((y + 34) / wireSpacing - 1);
+			int wire = (int) ((y + 34) / getWireSpacing() - 1);
 			if (gatePosition == -1) { // clicked on a qubit
 				qc.getWires().get(wire).xStart();
 			} else {
@@ -334,16 +330,21 @@ public class QuantumCircuitService {
 
 	/**
 	 * Open a quantum circuit from file.
+	 * 
 	 */
 	public void open() {
-		qc = new QuantumCircuit();
-		try (ObjectInputStream circuitReader = new ObjectInputStream(file)) {
-			qc = (QuantumCircuit) circuitReader.readObject();
-			wireSpacing = (int) (HEIGHT / (qc.getWires().size() + 1));
-		} catch (Exception e) {
-			errorMessage = "Error opening file!";
-			qc = new QuantumCircuit();
+		try {
+			qc.loadFromXML(file);
+		} catch (Exception e1) {
+			errorMessage = "Unable to load file!";
 		}
+	}
+
+	/**
+	 * @return The wirespacing between qubits.
+	 */
+	private int getWireSpacing() {
+		return (int) (HEIGHT / (qc.getWires().size() + 1));
 	}
 
 	/**
@@ -470,15 +471,15 @@ public class QuantumCircuitService {
 		 */
 
 		graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT);
+				(wire + 1) * getWireSpacing() - GATE_HEIGHT / 3, GATE_HEIGHT);
 		// vertical line
 		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing - 4 * GATE_HEIGHT / 3,
+				(wire + 1) * getWireSpacing() - 4 * GATE_HEIGHT / 3,
 				WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing + 2 * GATE_HEIGHT / 3);
+				(wire + 1) * getWireSpacing() + 2 * GATE_HEIGHT / 3);
 		// horizontal line
-		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10,
-				WIRE_SEGMENT_WIDTH * (position + 1) + 7 * GATE_HEIGHT / 4, (wire + 1) * wireSpacing - 10);
+		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 4, (wire + 1) * getWireSpacing() - 10,
+				WIRE_SEGMENT_WIDTH * (position + 1) + 7 * GATE_HEIGHT / 4, (wire + 1) * getWireSpacing() - 10);
 
 	}
 
@@ -491,7 +492,7 @@ public class QuantumCircuitService {
 	 */
 	private void setControlDot(final int wire, final int position, final Drawing graphicsContext) {
 		graphicsContext.filledCircle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing - GATE_HEIGHT / 3, GATE_HEIGHT / 3, FONT_COLOR);
+				(wire + 1) * getWireSpacing() - GATE_HEIGHT / 3, GATE_HEIGHT / 3, FONT_COLOR);
 	}
 
 	/**
@@ -504,8 +505,9 @@ public class QuantumCircuitService {
 	 */
 	public void setControlWire(final int wire1, final int wire2, final int position, final Drawing graphicsContext) {
 		graphicsContext.line(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire1 + 1) * wireSpacing - GATE_HEIGHT / 2, WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
-				(wire2 + 1) * wireSpacing - GATE_HEIGHT / 2);
+				(wire1 + 1) * getWireSpacing() - GATE_HEIGHT / 2,
+				WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
+				(wire2 + 1) * getWireSpacing() - GATE_HEIGHT / 2);
 	}
 
 	/**
@@ -516,7 +518,7 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setEmptyGate(final int wire, final int position, final Drawing graphicsContext) {
-		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * wireSpacing, " ☐", FONT);
+		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * getWireSpacing(), " ☐", FONT);
 	}
 
 	/**
@@ -528,8 +530,7 @@ public class QuantumCircuitService {
 		try {
 			this.file = file.getInputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorMessage = "Setting the file encountered an error";
 		}
 	}
 
@@ -543,7 +544,7 @@ public class QuantumCircuitService {
 	 */
 	private void setGateLabel(final String gateLabel, final int wire, final int position,
 			final Drawing graphicsContext) {
-		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * wireSpacing, gateLabel, FONT);
+		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * getWireSpacing(), gateLabel, FONT);
 	}
 
 	/**
@@ -557,7 +558,7 @@ public class QuantumCircuitService {
 	public void setGateSublabel(final String subLabel, final int wire, final int position,
 			final Drawing graphicsContext) {
 		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1) + GATE_HEIGHT / 4,
-				(wire + 1) * wireSpacing + THREE_FIFTHS_HEIGHT + GATE_HEIGHT / 4, subLabel, FONT);
+				(wire + 1) * getWireSpacing() + THREE_FIFTHS_HEIGHT + GATE_HEIGHT / 4, subLabel, FONT);
 	}
 
 	/**
@@ -580,8 +581,9 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setNextWireSegment(final int wire, final int position, final Drawing graphicsContext) {
-		graphicsContext.line(GATE_HEIGHT + WIRE_SEGMENT_WIDTH * position + GATE_HEIGHT, (wire + 1) * wireSpacing - 10,
-				WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 2, (wire + 1) * wireSpacing - 10);
+		graphicsContext.line(GATE_HEIGHT + WIRE_SEGMENT_WIDTH * position + GATE_HEIGHT,
+				(wire + 1) * getWireSpacing() - 10, WIRE_SEGMENT_WIDTH * (position + 1) - GATE_HEIGHT / 2,
+				(wire + 1) * getWireSpacing() - 10);
 	}
 
 	/**
@@ -591,7 +593,6 @@ public class QuantumCircuitService {
 	 */
 	public void setNumberOfQubits(final int numberOfQubits) {
 		qc.setNumberOfQubits(numberOfQubits);
-		wireSpacing = (int) (HEIGHT / (qc.getWires().size() + 1));
 	}
 
 	/**
@@ -611,7 +612,7 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setQubitLabel(final String qubitLabel, final int wire, final Drawing graphicsContext) {
-		graphicsContext.text(0, (wire + 1) * wireSpacing, qubitLabel, FONT);
+		graphicsContext.text(0, (wire + 1) * getWireSpacing(), qubitLabel, FONT);
 	}
 
 	/**

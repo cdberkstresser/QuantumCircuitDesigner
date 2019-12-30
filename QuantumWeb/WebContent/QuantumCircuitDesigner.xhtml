@@ -212,7 +212,7 @@
 					<b:tabView>
 						<b:tab title="States">
 							<b:dataTable id="qubitsTable" class="bound" excel="true"
-								csv="true" pdf="true"
+								csv="true" pdf="true" auto-update="true"
 								value="#{quantumCircuitService.statesTable}" var="row"
 								style="min-width:800px;" page-length-menu="[10,64,256]">
 								<b:dataTableColumn value="#{row.qubits}" label="Qubits"
@@ -239,7 +239,7 @@
 						</b:tab>
 						<b:tab title="Qubits">
 							<b:dataTable id="qubitsTable" class="bound" excel="true"
-								csv="true" pdf="true"
+								csv="true" pdf="true" auto-update="true"
 								value="#{quantumCircuitService.qubitsTable}" var="row"
 								style="min-width:800px;" page-length-menu="[10,64,256]">
 								<b:dataTableColumn value="#{row.qubit}" label="Qubit"

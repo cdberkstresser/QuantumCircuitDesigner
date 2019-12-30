@@ -11,15 +11,24 @@ import java.io.Serializable;
 public class QuantumWire implements Serializable {
 	/** Serializable ID. */
 	private static final long serialVersionUID = -5515084749351383005L;
+	private boolean dirty;
 	/** The qubit that starts the wire out. */
 	private Qubit start = new Qubit();
-	private boolean dirty;
 
 	/**
 	 * Constructor. Defaults to |0>.
 	 */
 	public QuantumWire() {
 		this(0);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param initialValue The initial value of the qubit.
+	 */
+	public QuantumWire(final Complex x, final Complex y) {
+		start = new Qubit(x, y);
 	}
 
 	/**
@@ -45,6 +54,14 @@ public class QuantumWire implements Serializable {
 		return start;
 	}
 
+	public boolean isDirty() {
+		return dirty;
+	}
+
+	public void resetDirty() {
+		dirty = false;
+	}
+
 	/**
 	 * Negates the start value of the qubit in this wire.
 	 */
@@ -55,13 +72,5 @@ public class QuantumWire implements Serializable {
 			start = new Qubit();
 		}
 		dirty = true;
-	}
-
-	public boolean isDirty() {
-		return dirty;
-	}
-
-	public void resetDirty() {
-		dirty = false;
 	}
 }

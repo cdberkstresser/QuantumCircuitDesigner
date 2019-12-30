@@ -3,6 +3,7 @@ module quantum {
 	requires transitive javafx.graphics;
 	requires javafx.fxml;
 	requires javafx.controls;
+	requires java.xml;
 
 	exports application to javafx.graphics;
 

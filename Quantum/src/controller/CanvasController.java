@@ -7,11 +7,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,7 +105,8 @@ public final class CanvasController {
 						String gateType = qc.getGate(wire, position).getGateType();
 						// if single simple gate
 						if (SingleQuantumGate.getGateTypes().contains(gateType)) {
-							graphicsContext.setGateLabel("  " + qc.getGate(wire, position).getGateType(), wire, position);
+							graphicsContext.setGateLabel("  " + qc.getGate(wire, position).getGateType(), wire,
+									position);
 							// if single parameter gate
 						} else if (SingleQuantumGateWithParameter.getGateTypes().contains(gateType)) {
 							String gateTypeSublabel = "("
@@ -142,7 +147,8 @@ public final class CanvasController {
 									graphicsContext.setGateSublabel("(On 0)", wire, position);
 								}
 							} else { // if not control bit
-								graphicsContext.setGateLabel(gateType.replace("C", "").replace("0", ""), wire, position);
+								graphicsContext.setGateLabel(gateType.replace("C", "").replace("0", ""), wire,
+										position);
 								String gateTypeSublabel = "("
 										+ ((ControlledQuantumGateWithParameter) qc.getGate(wire, position)).getValue()
 										+ ")";
@@ -363,30 +369,20 @@ public final class CanvasController {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open Quantum Circuit");
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-				"Quantum Circuit Designer Files (*.qcd)", "*.qcd");
+				"Quantum Circuit Designer Files (*.qcdxml)", "*.qcdxml");
 		fc.getExtensionFilters().add(extFilter);
 		File file = fc.showOpenDialog(canvas.getScene().getWindow());
 		if (file != null) {
-			try (ObjectInputStream circuitReader = new ObjectInputStream(new FileInputStream(file))) {
-				qc = (QuantumCircuit) circuitReader.readObject();
-				rebind();
-			} catch (FileNotFoundException e) {
-				Alert error = new Alert(AlertType.ERROR);
-				error.setTitle("File not found");
-				error.setContentText("File not found!");
-				error.showAndWait();
-			} catch (IOException e) {
+			try {
+				qc.loadFromXML(new FileInputStream(file));
+			} catch (Exception e) {
 				Alert error = new Alert(AlertType.ERROR);
 				error.setTitle("Invalid file format");
 				error.setContentText("That file is not recognized as a quantum circuit designer file!");
 				error.showAndWait();
-			} catch (ClassNotFoundException e) {
-				Alert error = new Alert(AlertType.ERROR);
-				error.setTitle("Class not found");
-				error.setContentText("Class not found!");
-				error.showAndWait();
 			}
 		}
+		rebind();
 	}
 
 	@FXML
@@ -394,24 +390,25 @@ public final class CanvasController {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open Quantum Circuit");
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-				"Quantum Circuit Designer Files (*.qcd)", "*.qcd");
+				"Quantum Circuit Designer Files (*.qcdxml)", "*.qcdxml");
 		fc.getExtensionFilters().add(extFilter);
 		File file = fc.showSaveDialog(canvas.getScene().getWindow());
-		if (!file.getName().endsWith(".qcd")) {
-			file = new File(file.getAbsolutePath() + ".qcd");
+		if (!file.getName().endsWith(".qcdxml")) {
+			file = new File(file.getAbsolutePath() + ".qcdxml");
 		}
-		try (ObjectOutputStream circuitWriter = new ObjectOutputStream(new FileOutputStream(file))) {
-			circuitWriter.writeObject(qc);
+		try {
+			qc.getAsXML(new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("File not found");
 			error.setContentText("File not found!");
 			error.showAndWait();
-		} catch (IOException e) {
-			Alert error = new Alert(AlertType.ERROR);
-			error.setTitle("Invalid file format");
-			error.setContentText("That file is not recognized as a quantum circuit designer file!");
-			error.showAndWait();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

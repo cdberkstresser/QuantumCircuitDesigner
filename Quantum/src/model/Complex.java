@@ -9,24 +9,20 @@ import java.io.Serializable;
  *
  */
 public final class Complex implements Serializable {
-	/** Serializable ID. */
-	private static final long serialVersionUID = 7676764277764311560L;
 	/** The number of digits to which to round numbers. */
 	public static final int PRECISION = 3;
-	/** The real part of the complex number. */
-	private double real;
+	/** Serializable ID. */
+	private static final long serialVersionUID = 7676764277764311560L;
 	/** The imaginary part of the complex number. */
 	private double imaginary;
+	/** The real part of the complex number. */
+	private double real;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param real      Real part of the complex number.
-	 * @param imaginary Imaginary part of the complex number.
+	 * Constructor for a complex number of magnitude zero.
 	 */
-	public Complex(final double real, final double imaginary) {
-		this.real = real;
-		this.imaginary = imaginary;
+	public Complex() {
+		this(0.0, 0.0);
 	}
 
 	/**
@@ -39,31 +35,14 @@ public final class Complex implements Serializable {
 	}
 
 	/**
-	 * Constructor for a complex number of magnitude zero.
+	 * Constructor.
+	 * 
+	 * @param real      Real part of the complex number.
+	 * @param imaginary Imaginary part of the complex number.
 	 */
-	public Complex() {
-		this(0.0, 0.0);
-	}
-
-	/**
-	 * @return Real portion of the complex number.
-	 */
-	public double getReal() {
-		return real;
-	}
-
-	/**
-	 * @return Imaginary portion of the complex number.
-	 */
-	public double getImaginary() {
-		return imaginary;
-	}
-
-	/**
-	 * @return Modulus (distance from the pole) of the complex number.
-	 */
-	public double modulus() {
-		return Math.sqrt(real * real + imaginary * imaginary);
+	public Complex(final double real, final double imaginary) {
+		this.real = real;
+		this.imaginary = imaginary;
 	}
 
 	/**
@@ -78,28 +57,11 @@ public final class Complex implements Serializable {
 	}
 
 	/**
-	 * Multiplies two complex numbers.
-	 * 
-	 * @param numberToMultiply The number to which to multiply by this instance.
-	 * @return A complex number representing the product of the two numbers.
-	 * @implSpec Does not change the value of instance.
+	 * Clones the object with a new reference.
 	 */
-	public Complex multiply(final Complex numberToMultiply) {
-		return new Complex(this.real * numberToMultiply.real - this.imaginary * numberToMultiply.imaginary,
-				this.imaginary * numberToMultiply.real + this.real * numberToMultiply.imaginary);
-	}
-
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		final int bitshift = 32;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(imaginary);
-		result = prime * result + (int) (temp ^ (temp >>> bitshift));
-		temp = Double.doubleToLongBits(real);
-		result = prime * result + (int) (temp ^ (temp >>> bitshift));
-		return result;
+	public Complex clone() {
+		return new Complex(real, imaginary);
 	}
 
 	@Override
@@ -121,6 +83,52 @@ public final class Complex implements Serializable {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @return Imaginary portion of the complex number.
+	 */
+	public double getImaginary() {
+		return imaginary;
+	}
+
+	/**
+	 * @return Real portion of the complex number.
+	 */
+	public double getReal() {
+		return real;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		final int bitshift = 32;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(imaginary);
+		result = prime * result + (int) (temp ^ (temp >>> bitshift));
+		temp = Double.doubleToLongBits(real);
+		result = prime * result + (int) (temp ^ (temp >>> bitshift));
+		return result;
+	}
+
+	/**
+	 * @return Modulus (distance from the pole) of the complex number.
+	 */
+	public double modulus() {
+		return Math.sqrt(real * real + imaginary * imaginary);
+	}
+
+	/**
+	 * Multiplies two complex numbers.
+	 * 
+	 * @param numberToMultiply The number to which to multiply by this instance.
+	 * @return A complex number representing the product of the two numbers.
+	 * @implSpec Does not change the value of instance.
+	 */
+	public Complex multiply(final Complex numberToMultiply) {
+		return new Complex(this.real * numberToMultiply.real - this.imaginary * numberToMultiply.imaginary,
+				this.imaginary * numberToMultiply.real + this.real * numberToMultiply.imaginary);
 	}
 
 	@Override

@@ -26,6 +26,17 @@ public final class Qubit implements Serializable {
 	/**
 	 * Constructor.
 	 * 
+	 * @param x The x value of this qubit.
+	 * @param y The x value of this qubit.
+	 */
+	public Qubit(final Complex x, final Complex y) {
+		this.x = x.clone();
+		this.y = y.clone();
+	}
+
+	/**
+	 * Constructor.
+	 * 
 	 * @param value The value of this qubit.
 	 */
 	public Qubit(final int value) {
@@ -36,45 +47,6 @@ public final class Qubit implements Serializable {
 			x = new Complex(0);
 			y = new Complex(1);
 		}
-	}
-
-	/**
-	 * @return The first value of the matrix for this qubit.
-	 */
-	public Complex getX() {
-		return x;
-	}
-
-	/**
-	 * @return The second value of the matrix for this qubit.
-	 */
-	public Complex getY() {
-		return y;
-	}
-
-	@Override
-	public String toString() {
-		if (x.equals(new Complex(1))) {
-			return "|0>";
-		} else {
-			return "|1>";
-		}
-	}
-
-	/**
-	 * @return The ket of this qubit.
-	 */
-	public Complex[][] getState() {
-		return new Complex[][] { { x }, { y } };
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((x == null) ? 0 : x.hashCode());
-		result = prime * result + ((y == null) ? 0 : y.hashCode());
-		return result;
 	}
 
 	@Override
@@ -104,5 +76,44 @@ public final class Qubit implements Serializable {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @return The ket of this qubit.
+	 */
+	public Complex[][] getState() {
+		return new Complex[][] { { x }, { y } };
+	}
+
+	/**
+	 * @return The first value of the matrix for this qubit.
+	 */
+	public Complex getX() {
+		return x;
+	}
+
+	/**
+	 * @return The second value of the matrix for this qubit.
+	 */
+	public Complex getY() {
+		return y;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((x == null) ? 0 : x.hashCode());
+		result = prime * result + ((y == null) ? 0 : y.hashCode());
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		if (x.equals(new Complex(1))) {
+			return "|0>";
+		} else {
+			return "|1>";
+		}
 	}
 }
