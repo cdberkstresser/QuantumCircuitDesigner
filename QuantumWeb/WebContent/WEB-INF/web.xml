@@ -19,7 +19,8 @@
 	<context-param>
 		<param-name>BootsFaces_USETHEME</param-name>
 		<param-value>true</param-value>
-	</context-param><context-param>
+	</context-param>
+	<context-param>
 		<param-name>BootsFaces_THEME</param-name>
 		<param-value>slate</param-value>
 	</context-param>
@@ -30,5 +31,9 @@
 	<context-param>
 		<param-name>net.bootsfaces.get_jquery_from_cdn</param-name>
 		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+		<param-value>8192</param-value>
 	</context-param>
 </web-app>

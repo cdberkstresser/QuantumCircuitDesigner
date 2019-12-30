@@ -108,12 +108,15 @@ public class ControlledQuantumGateWithParameter implements QuantumGateWithParame
 								returnGate[row][col] = new Complex(0);
 							}
 						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+							if (row - col == -1 && Math.min(row, col) % 2 == 0) {
 								returnGate[row][col] = new Complex(-Math.sin(value / 2));
+							} else if (row - col == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(Math.sin(value / 2));
 							} else if (row == col) {
 								returnGate[row][col] = new Complex(Math.cos(value / 2));
-							} else
+							} else {
 								returnGate[row][col] = new Complex(0);
+							}
 						}
 					}
 				}
@@ -188,15 +191,23 @@ public class ControlledQuantumGateWithParameter implements QuantumGateWithParame
 								returnGate[row][col] = new Complex(0);
 							}
 						} else {
-							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+							if (row - col == -1 && Math.min(row, col) % 2 == 0) {
 								returnGate[row][col] = new Complex(-Math.sin(value / 2));
+							} else if (row - col == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(Math.sin(value / 2));
 							} else if (row == col) {
 								returnGate[row][col] = new Complex(Math.cos(value / 2));
-							} else
+							} else {
 								returnGate[row][col] = new Complex(0);
+							}
 						}
 					}
 				}
+				for (Complex[] c : returnGate) {
+					System.out.println(Arrays.toString(c));
+				}
+				System.out.println();
+				System.out.println();
 				return returnGate;
 			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
@@ -231,6 +242,7 @@ public class ControlledQuantumGateWithParameter implements QuantumGateWithParame
 		default:
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		}
+
 	}
 
 	/**

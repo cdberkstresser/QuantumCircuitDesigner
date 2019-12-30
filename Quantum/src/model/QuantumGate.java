@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,5 +30,9 @@ public interface QuantumGate extends Comparable<QuantumGate>, Serializable {
 	/** @return The identity matrix. */
 	static Complex[][] getIdentityMatrix() {
 		return new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(1) } };
+	}
+
+	static int getNumberOfControls(String gateType) {
+		return gateType.replaceAll("[^C]+", "").length();
 	}
 }

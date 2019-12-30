@@ -17,7 +17,7 @@ public class ControlledQuantumGate implements QuantumGate {
 	private static final long serialVersionUID = 746505294177134097L;
 	/** List of gates supported by this class. */
 	private static List<String> gateTypes = new ArrayList<>(
-			Arrays.asList("CNOT", "C0NOT", "CCNOT", "CC00NOT", "CH", "C0H", "CCH", "CC00H"));
+			Arrays.asList("CNOT", "C0NOT", "CCNOT", "CC00NOT", "CH", "C0H", "CCH", "CC00H", "CCCNOT", "CCC000NOT"));
 	/** The gate type as a string. Should be filtered through the list above. */
 	private String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
@@ -180,7 +180,60 @@ public class ControlledQuantumGate implements QuantumGate {
 				}
 				return returnGate;
 			}
-
+			throw new UnsupportedOperationException("Gate not implemented yet!");
+		case "CCCNOT":
+			if (wires.subList(0, wires.size() - 1).stream().max(Comparator.naturalOrder()).get()
+					- wires.subList(0, wires.size() - 1).stream().min(Comparator.naturalOrder()).get() == 2
+					&& wires.get(3) > Math.max(Math.max(wires.get(0), wires.get(1)), wires.get(2))) {
+				int size = (int) Math.pow(2, wires.get(3) - Math.min(Math.min(wires.get(0), wires.get(1)),wires.get(2)) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row < size * 7 / 8 || col < size * 7 / 8) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						}
+					}
+				}
+				return returnGate;
+			}
+			throw new UnsupportedOperationException("Gate not implemented yet!");
+		case "CCC000NOT":
+			if (wires.subList(0, wires.size() - 1).stream().max(Comparator.naturalOrder()).get()
+					- wires.subList(0, wires.size() - 1).stream().min(Comparator.naturalOrder()).get() == 2
+					&& wires.get(3) > Math.max(Math.max(wires.get(0), wires.get(1)), wires.get(2))) {
+				int size = (int) Math.pow(2, wires.get(3) - Math.min(Math.min(wires.get(0), wires.get(1)),wires.get(2)) + 1);
+				Complex[][] returnGate = new Complex[size][size];
+				for (int row = 0; row < size; ++row) {
+					for (int col = 0; col < size; ++col) {
+						// build the diagonal on 3/4 of the grid.
+						if (row >= size / 8 || col >= size / 8) {
+							if (row == col) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						} else {
+							if (Math.abs(row - col) == 1 && Math.min(row, col) % 2 == 0) {
+								returnGate[row][col] = new Complex(1);
+							} else {
+								returnGate[row][col] = new Complex(0);
+							}
+						}
+					}
+				}
+				return returnGate;
+			}
 			throw new UnsupportedOperationException("Gate not implemented yet!");
 		case "CH":
 			if (wires.get(0) < wires.get(1)) {

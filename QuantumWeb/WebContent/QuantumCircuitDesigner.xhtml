@@ -20,7 +20,7 @@
 					<b:navLink></b:navLink>
 					<b:navLink value="Open" href="#">
 						<h:inputFile value="#{quantumCircuitService.file}">
-							<f:ajax listener="#{quantumCircuitService.open()}" render="@form" />
+							<f:ajax listener="#{quantumCircuitService.open()}" />
 						</h:inputFile>
 					</b:navLink>
 					<b:navCommandLink value="Save"
@@ -50,12 +50,34 @@
 							action="#{quantumCircuitService.setCircuit('Bell State 3')}">
 						</b:navCommandLink>
 					</b:dropMenu>
-					<b:navCommandLink value="GHZ State"
-						action="#{quantumCircuitService.setCircuit('GHZ State')}">
-					</b:navCommandLink>
-					<b:navCommandLink value="W State"
-						action="#{quantumCircuitService.setCircuit('W State')}">
-					</b:navCommandLink>
+					<b:dropMenu value="GHZ States">
+						<b:navCommandLink value="GHZ State (3 Qubits)"
+							action="#{quantumCircuitService.setCircuit('GHZ State 3')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="GHZ State (4 Qubits)"
+							action="#{quantumCircuitService.setCircuit('GHZ State 4')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="GHZ State (5 Qubits)"
+							action="#{quantumCircuitService.setCircuit('GHZ State 5')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="GHZ State (6 Qubits)"
+							action="#{quantumCircuitService.setCircuit('GHZ State 6')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="GHZ State (7 Qubits)"
+							action="#{quantumCircuitService.setCircuit('GHZ State 7')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="GHZ State (8 Qubits)"
+							action="#{quantumCircuitService.setCircuit('GHZ State 8')}">
+						</b:navCommandLink>
+					</b:dropMenu>
+					<b:dropMenu value="W States">
+						<b:navCommandLink value="W State (3 Qubits)"
+							action="#{quantumCircuitService.setCircuit('W State 3')}">
+						</b:navCommandLink>
+						<b:navCommandLink value="W State (4 Qubits)"
+							action="#{quantumCircuitService.setCircuit('W State 4')}">
+						</b:navCommandLink>
+					</b:dropMenu>
 				</b:dropMenu>
 				<b:dropMenu value="Qubits">
 					<b:navCommandLink value="1"
@@ -75,6 +97,34 @@
 					<b:navCommandLink value="8"
 						action="#{quantumCircuitService.setNumberOfQubits(8)}"></b:navCommandLink>
 				</b:dropMenu>
+			</b:navbarLinks>
+			<b:navbarLinks pull="right">
+				<b:modal id="license" title="Terms of Use"
+					styleClass="modalPseudoClass">
+					<p>Underlying software is licensed under the Apache License,
+						Version 2.0, and usage of this web site is intended to follow the
+						same idea of the underlying software license.</p>
+					<p>You may not use this service except in compliance with the
+						License.</p>
+					<p>
+						You may obtain a copy of the License at <a
+							href='http://www.apache.org/licenses/LICENSE-2.0' target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a><br />
+						and a copy of the source code of this website at <a
+							href='https://github.com/cdberkstresser/QuantumCircuitDesigner'
+							target="_blank">https://github.com/cdberkstresser/QuantumCircuitDesigner</a>
+					</p>
+					<p>
+						<b>This web site is provided on an "AS IS" BASIS, WITHOUT
+							WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</b>
+						See the License for the specific language governing permissions
+						and limitations under the License.
+					</p>
+					<f:facet name="footer">
+						<b:button value="Ok" look="primary" dismiss="modal" />
+					</f:facet>
+				</b:modal>
+				<b:navLink value="Terms of Use"
+					onclick="$('.modalPseudoClass').modal()" />
 			</b:navbarLinks>
 		</b:navBar>
 		<b:label text="Gates:"></b:label>
@@ -120,6 +170,10 @@
 				<b:button value="CCH" onclick="setGateType('CCH',0.0);" />
 				<b:button value="CC00H" onclick="setGateType('CC00H',0.0);" />
 			</b:buttonGroup>
+			<b:buttonGroup>
+				<b:button value="CCCNOT" onclick="setGateType('CCCNOT',0.0);" />
+				<b:button value="CCC000NOT" onclick="setGateType('CCC000NOT',0.0);" />
+			</b:buttonGroup>
 		</b:buttonToolbar>
 		<div style="min-width: 800px;">
 			<b:remoteCommand name="setGateType" id="setGateType"
@@ -142,7 +196,7 @@
 				<b:tab title="States">
 					<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
 						pdf="true" value="#{quantumCircuitService.statesTable}" var="row"
-						style="min-width:800px;">
+						style="min-width:800px;" page-length-menu="[10,64,256]">
 						<b:dataTableColumn value="#{row.qubits}" label="Qubits"
 							style="width:10%" />
 						<b:dataTableColumn value="#{row.state0}" label="State 0"
@@ -169,7 +223,7 @@
 				<b:tab title="Qubits">
 					<b:dataTable id="qubitsTable" class="bound" excel="true" csv="true"
 						pdf="true" value="#{quantumCircuitService.qubitsTable}" var="row"
-						style="min-width:800px;">
+						style="min-width:800px;" page-length-menu="[10,64,256]">
 						<b:dataTableColumn value="#{row.qubit}" label="Qubit"
 							style="width:10%" />
 						<b:dataTableColumn value="#{row.state0}" label="State 0"
