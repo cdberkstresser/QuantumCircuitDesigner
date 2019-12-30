@@ -107,23 +107,32 @@
 			<b:navbarLinks pull="right">
 				<b:modal id="license" title="Terms of Use"
 					styleClass="modalPseudoClass">
-					<p>Underlying software is licensed under the Apache License,
-						Version 2.0, and usage of this web site is designed to follow the
-						same intention of the underlying software license.</p>
-					<p>You may not use this service except in compliance with the
-						License.</p>
+					<p>Underlying software is licensed under the MIT License, and
+						usage of this web site is designed to follow the same intention of
+						the underlying software license.</p>
+					<p>Permission is hereby granted, free of charge, to any person
+						obtaining a copy of this software and associated documentation
+						files (the "Software"), to deal in the Software without
+						restriction, including without limitation the rights to use, copy,
+						modify, merge, publish, distribute, sublicense, and/or sell copies
+						of the Software, and to permit persons to whom the Software is
+						furnished to do so, subject to the following conditions:</p>
+					<p>The above copyright notice and this permission notice shall
+						be included in all copies or substantial portions of the Software.</p>
+					<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+						KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+						WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+						AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+						HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+						WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+						OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+						DEALINGS IN THE SOFTWARE.</p>
 					<p>
 						You may obtain a copy of the License at <a
-							href='http://www.apache.org/licenses/LICENSE-2.0' target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a><br />
+							href='https://opensource.org/licenses/MIT' target="_blank">https://opensource.org/licenses/MIT</a><br />
 						and a copy of the source code of this web site at <a
 							href='https://github.com/cdberkstresser/QuantumCircuitDesigner'
 							target="_blank">https://github.com/cdberkstresser/QuantumCircuitDesigner</a>
-					</p>
-					<p>
-						<b>This web site is provided on an "AS IS" BASIS, WITHOUT
-							WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</b>
-						See the License for the specific language governing permissions
-						and limitations under the License.
 					</p>
 					<f:facet name="footer">
 						<b:button value="Ok" look="primary" dismiss="modal" />
@@ -196,7 +205,7 @@
 				</b:canvas>
 				<b:remoteCommand name="setClick" id="setClick"
 					actionListener="#{quantumCircuitService.handleCanvasClick}"
-					parameters="x,y,width,height" update="@(.bound)" />
+					parameters="x,y,width,height,ctrlKey" update="@(.bound)" />
 			</div>
 			<c:choose>
 				<c:when test="#{quantumCircuitService.numberOfQubits lt 9}">

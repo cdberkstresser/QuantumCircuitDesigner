@@ -17,7 +17,7 @@ public final class QuantumDrawing extends Drawing {
 				+ "canvas.onclick = function() {"
 				+ " var xOffset = canvas.offsetLeft;"
 				+ " var yOffset = canvas.offsetTop;"
-				+ " setClick(event.clientX-xOffset, event.clientY-yOffset,canvas.clientWidth,canvas.clientHeight, event);" 
+				+ " setClick(event.clientX-xOffset, event.clientY-yOffset,canvas.clientWidth,canvas.clientHeight,event.ctrlKey, event);" 
 				+ "};"
 				+ "canvas.title = '"+ toolTip +"';";
 		

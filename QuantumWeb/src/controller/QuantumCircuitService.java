@@ -283,6 +283,8 @@ public class QuantumCircuitService {
 				.parseDouble(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("y"));
 		double width = Double.parseDouble(
 				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("width"));
+		boolean ctrlKey = Boolean.parseBoolean(
+				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("ctrlKey"));
 
 		int x = (int) (rawX * WIDTH / width);
 		int y = (int) (rawY * WIDTH / width);
