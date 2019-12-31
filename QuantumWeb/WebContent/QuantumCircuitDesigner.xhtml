@@ -109,7 +109,7 @@
 			</b:navbarLinks>
 			<b:navbarLinks pull="right">
 				<b:modal id="license" title="Terms of Use"
-					styleClass="modalPseudoClass">
+					styleClass="modalTermsOfUse">
 					<p>Underlying software is licensed under the MIT License, and
 						usage of this web site is designed to follow the same intention of
 						the underlying software license.</p>
@@ -141,8 +141,32 @@
 						<b:button value="Ok" look="primary" dismiss="modal" />
 					</f:facet>
 				</b:modal>
+				<b:modal id="privacy" title="Privacy Notice and Use of Data"
+					styleClass="modalPrivacy">
+					<p>This website is designed to provide for maximum user privacy
+						and transparency. No sign-on is required, and this site does not
+						use cookies nor does it track user information beyond the
+						necessary cookies, access logs,and session IDs needed to persist
+						circuits enough to edit them provided by the web service engine
+						and the JSF/Bootsfaces framework.</p>
+					<p>This website offers a file open / save service. In order to
+						maximize this transparency while providing users the ability to
+						save and reload their work, the file format itself is xml and can
+						be viewed in a plain text editor for those wishing to see the
+						information being passed into and out of quantum circuits.</p>
+					<p>
+						For further analysis of privacy practices, the source code of this
+						web site can be found at <a
+							href='https://github.com/cdberkstresser/QuantumCircuitDesigner'
+							target="_blank">https://github.com/cdberkstresser/QuantumCircuitDesigner</a>.
+					</p>
+					<f:facet name="footer">
+						<b:button value="Ok" look="primary" dismiss="modal" />
+					</f:facet>
+				</b:modal>
 				<b:navLink value="Terms of Use"
-					onclick="$('.modalPseudoClass').modal()" />
+					onclick="$('.modalTermsOfUse').modal()" />
+				<b:navLink value="Privacy" onclick="$('.modalPrivacy').modal()" />
 			</b:navbarLinks>
 		</b:navBar>
 		<b:navBar brand="Gates" brandHref="#" fluid="true">
