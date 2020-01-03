@@ -17,9 +17,9 @@
 <h:body>
 	<h:form enctype="multipart/form-data">
 		<b:navBar brand="Quantum Circuit Designer" brandHref="#" fluid="true"
-			style="margin-bottom:0px;">
+			style="margin-bottom:0px;text-shadow:none;">
 			<b:navbarLinks>
-				<b:dropMenu value="Circuit">
+				<b:dropMenu value="Circuit" style="text-shadow:none;">
 					<b:navCommandLink value="New"
 						action="#{quantumCircuitService.clear()}"></b:navCommandLink>
 					<b:navLink></b:navLink>
@@ -31,7 +31,7 @@
 					<b:navCommandLink value="Save"
 						action="#{quantumCircuitService.getCircuitAsFile()}"></b:navCommandLink>
 				</b:dropMenu>
-				<b:dropMenu value="Samples">
+				<b:dropMenu value="Samples" style="text-shadow:none;">
 					<b:navCommandLink value="Plus State (|+)>"
 						action="#{quantumCircuitService.setCircuit('Plus State')}">
 					</b:navCommandLink>
@@ -164,14 +164,15 @@
 						<b:button value="Ok" look="primary" dismiss="modal" />
 					</f:facet>
 				</b:modal>
-				<b:navLink value="Terms of Use"
+				<b:navLink value="Terms of Use" style="text-shadow:none;"
 					onclick="$('.modalTermsOfUse').modal()" />
-				<b:navLink value="Privacy" onclick="$('.modalPrivacy').modal()" />
+				<b:navLink value="Privacy" onclick="$('.modalPrivacy').modal()"
+					style="text-shadow:none;" />
 			</b:navbarLinks>
 		</b:navBar>
 		<b:navBar brand="Gates" brandHref="#" fluid="true">
 			<b:navbarLinks>
-				<b:dropMenu value="Single Qubit Gates">
+				<b:dropMenu value="Single Qubit Gates" style="text-shadow:none;">
 					<b:navLink value="I" onclick="setGateType('I',0.0);" />
 					<b:navLink value="H" onclick="setGateType('H',0.0);" />
 					<b:navLink value="X" onclick="setGateType('X',0.0);" />
@@ -185,7 +186,7 @@
 					<b:navLink value="Rz"
 						onclick="var value = prompt('Please enter the value to rotate:','0.0');setGateType('Rz',value);" />
 				</b:dropMenu>
-				<b:dropMenu value="Controlled Gates">
+				<b:dropMenu value="Controlled Gates" style="text-shadow:none;">
 					<b:navLink value="CNOT" onclick="setGateType('CNOT',0.0);" />
 					<b:navLink value="CH" onclick="setGateType('CH',0.0);" />
 					<b:navLink />
@@ -201,7 +202,8 @@
 					<b:navLink />
 					<b:navLink value="CCCNOT" onclick="setGateType('CCCNOT',0.0);" />
 				</b:dropMenu>
-				<b:dropMenu value="Controlled (on 0) Gates">
+				<b:dropMenu value="Controlled (on 0) Gates"
+					style="text-shadow:none;">
 					<b:navLink value="C0NOT" onclick="setGateType('C0NOT',0.0);" />
 					<b:navLink value="C0H" onclick="setGateType('C0H',0.0);" />
 					<b:navLink value="C0Rx"
