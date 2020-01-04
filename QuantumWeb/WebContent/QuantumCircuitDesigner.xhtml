@@ -236,7 +236,7 @@
 				</b:canvas>
 				<b:remoteCommand name="setClick" id="setClick"
 					actionListener="#{quantumCircuitService.handleCanvasClick}"
-					parameters="x,y,width,height,ctrlKey" update="@(.bound)" />
+					parameters="x,y,width,height,ctrlKey"  />
 			</div>
 			<c:choose>
 				<c:when test="#{quantumCircuitService.numberOfQubits lt 9}">
