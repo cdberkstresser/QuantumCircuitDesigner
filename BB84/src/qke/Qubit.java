@@ -1,3 +1,4 @@
+package qke;
 /**
  * This class represents the polarized classical bits in BB84 key exchange.
  * 
