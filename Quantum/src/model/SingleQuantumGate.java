@@ -1,9 +1,10 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A single simple quantum gate.
@@ -12,10 +13,23 @@ import java.util.List;
  *
  */
 public class SingleQuantumGate implements QuantumGate {
+	/** List of gates supported by this class. */
+	private static Map<String, Complex[][]> gates = new HashMap<>();
+	{
+		gates.put("I", new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(1) } });
+		gates.put("H", new Complex[][] { { new Complex(1 / Math.sqrt(2)), new Complex(1 / Math.sqrt(2)) },
+				{ new Complex(1 / Math.sqrt(2)), new Complex(-1 / Math.sqrt(2)) } });
+		gates.put("X", new Complex[][] { { new Complex(0), new Complex(1) }, { new Complex(1), new Complex(0) } });
+		gates.put("Y",
+				new Complex[][] { { new Complex(0), new Complex(0, -1) }, { new Complex(0, 1), new Complex(0) } });
+		gates.put("Z", new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(-1) } });
+		gates.put("S", new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(0, 1) } });
+		gates.put("T", new Complex[][] { { new Complex(1), new Complex(0) },
+				{ new Complex(0), new Complex(Math.cos(Math.PI / 4.0), Math.sin(Math.PI / 4.0)) } });
+	}
+
 	/** Serializable ID. */
 	private static final long serialVersionUID = -2798838823193813073L;
-	/** List of gates supported by this class. */
-	private static List<String> gateTypes = new ArrayList<>(Arrays.asList("I", "H", "X", "Y", "Z", "S", "T"));
 	/** The gate type as a string. Should be filtered through the list above. */
 	private String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
@@ -55,27 +69,7 @@ public class SingleQuantumGate implements QuantumGate {
 	 */
 	@Override
 	public Complex[][] getGateMatrix() {
-		switch (gateType) {
-		case "I":
-		case "Identity":
-			return new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(1) } };
-		case "H":
-			return new Complex[][] { { new Complex(1 / Math.sqrt(2)), new Complex(1 / Math.sqrt(2)) },
-					{ new Complex(1 / Math.sqrt(2)), new Complex(-1 / Math.sqrt(2)) } };
-		case "X":
-			return new Complex[][] { { new Complex(0), new Complex(1) }, { new Complex(1), new Complex(0) } };
-		case "Y":
-			return new Complex[][] { { new Complex(0), new Complex(0, -1) }, { new Complex(0, 1), new Complex(0) } };
-		case "Z":
-			return new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(-1) } };
-		case "S":
-			return new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(0, 1) } };
-		case "T":
-			return new Complex[][] { { new Complex(1), new Complex(0) },
-					{ new Complex(0), new Complex(Math.cos(Math.PI / 4.0), Math.sin(Math.PI / 4.0)) } };
-		default:
-			throw new UnsupportedOperationException("Gate not implemented yet!");
-		}
+		return gates.get(gateType);
 	}
 
 	/**
@@ -125,7 +119,7 @@ public class SingleQuantumGate implements QuantumGate {
 	/**
 	 * @return A list of gate types supported by this class.
 	 */
-	public static List<String> getGateTypes() {
-		return gateTypes;
+	public static Set<String> getGateTypes() {
+		return gates.keySet();
 	}
 }
