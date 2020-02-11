@@ -15,7 +15,7 @@ public class SingleQuantumGate implements QuantumGate {
 	/** Serializable ID. */
 	private static final long serialVersionUID = -2798838823193813073L;
 	/** List of gates supported by this class. */
-	private static List<String> gateTypes = new ArrayList<>(Arrays.asList("I", "H", "X", "S", "T"));
+	private static List<String> gateTypes = new ArrayList<>(Arrays.asList("I", "H", "X", "Y", "Z", "S", "T"));
 	/** The gate type as a string. Should be filtered through the list above. */
 	private String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
@@ -64,6 +64,10 @@ public class SingleQuantumGate implements QuantumGate {
 					{ new Complex(1 / Math.sqrt(2)), new Complex(-1 / Math.sqrt(2)) } };
 		case "X":
 			return new Complex[][] { { new Complex(0), new Complex(1) }, { new Complex(1), new Complex(0) } };
+		case "Y":
+			return new Complex[][] { { new Complex(0), new Complex(0, -1) }, { new Complex(0, 1), new Complex(0) } };
+		case "Z":
+			return new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(-1) } };
 		case "S":
 			return new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(0, 1) } };
 		case "T":
