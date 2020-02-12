@@ -15,7 +15,7 @@ import java.util.Set;
 public class SingleQuantumGate implements QuantumGate {
 	/** List of gates supported by this class. */
 	private static Map<String, Complex[][]> gates = new HashMap<>();
-	{
+	static {
 		gates.put("I", new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(1) } });
 		gates.put("H", new Complex[][] { { new Complex(1 / Math.sqrt(2)), new Complex(1 / Math.sqrt(2)) },
 				{ new Complex(1 / Math.sqrt(2)), new Complex(-1 / Math.sqrt(2)) } });

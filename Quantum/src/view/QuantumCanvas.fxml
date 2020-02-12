@@ -51,6 +51,8 @@
 						</RadioMenuItem>
 						<RadioMenuItem mnemonicParsing="false" text="H" toggleGroup="$tgGates" />
 						<RadioMenuItem mnemonicParsing="false" text="X" toggleGroup="$tgGates" />
+						<RadioMenuItem mnemonicParsing="false" text="Y" toggleGroup="$tgGates" />
+						<RadioMenuItem mnemonicParsing="false" text="Z" toggleGroup="$tgGates" />
 						<RadioMenuItem mnemonicParsing="false" text="S" toggleGroup="$tgGates" />
 						<RadioMenuItem mnemonicParsing="false" text="T" toggleGroup="$tgGates" />
 						<SeparatorMenuItem mnemonicParsing="false" />

@@ -10,6 +10,7 @@ import java.util.List;
  *
  */
 public interface QuantumGate extends Comparable<QuantumGate>, Serializable {
+	
 	/**
 	 * @return A list of wires associated with this gate.
 	 */
