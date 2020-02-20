@@ -222,6 +222,10 @@
 						onclick="setGateType('CCC000NOT',0.0);" />
 				</b:dropMenu>
 			</b:navbarLinks>
+			<b:navbarLinks pull="right">
+				<b:navCommandLink value="Clear All Gates"
+					action="#{quantumCircuitService.clearGates()}"></b:navCommandLink>
+			</b:navbarLinks>
 		</b:navBar>
 		<div style="min-width: 800px;">
 			<b:remoteCommand name="setGateType" id="setGateType"
@@ -238,7 +242,7 @@
 				</b:canvas>
 				<b:remoteCommand name="setClick" id="setClick"
 					actionListener="#{quantumCircuitService.handleCanvasClick}"
-					parameters="x,y,width,height,ctrlKey"  />
+					parameters="x,y,width,height,ctrlKey" />
 			</div>
 			<c:choose>
 				<c:when test="#{quantumCircuitService.numberOfQubits lt 9}">

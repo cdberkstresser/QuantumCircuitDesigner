@@ -76,6 +76,15 @@ public class QuantumCircuitService {
 	}
 
 	/**
+	 * Clear all gates
+	 */
+	public void clearGates() {
+		int numberOfQubits = qc.getWires().size();
+		qc = new QuantumCircuit();
+		qc.setNumberOfQubits(numberOfQubits);
+	}
+
+	/**
 	 * Output the circuit as a file.
 	 */
 	public void getCircuitAsFile() {
