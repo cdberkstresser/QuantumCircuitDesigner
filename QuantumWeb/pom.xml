@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>net.bootsfaces</groupId>
 			<artifactId>bootsfaces</artifactId>
-			<version>1.4.2</version>
+			<version>1.5.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.18</version>
+			<version>LATEST</version>
 		</dependency>
 
 	</dependencies>
