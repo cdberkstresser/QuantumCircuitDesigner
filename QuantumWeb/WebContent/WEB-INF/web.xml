@@ -22,7 +22,7 @@
 	</context-param>
 	<context-param>
 		<param-name>BootsFaces_THEME</param-name>
-		<param-value>slate</param-value>
+		<param-value>darkly</param-value>
 	</context-param>
 	<context-param>
 		<param-name>net.bootsfaces.get_datatable_from_cdn</param-name>
