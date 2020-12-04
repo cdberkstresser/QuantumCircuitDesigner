@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.annotation.FacesConfig;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.inject.Named;
 import javax.servlet.http.Part;
 
 import model.Complex;
@@ -25,9 +27,13 @@ import model.SingleQuantumGate;
 import model.SingleQuantumGateWithParameter;
 import net.bootsfaces.component.canvas.Drawing;
 
-@ManagedBean
-@ViewScoped
-public class QuantumCircuitService {
+@Named
+@SessionScoped
+public class QuantumCircuitService implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5098448889012295656L;
 	/** font. */
 	public static final String FONT = "2em Arial";
 	/** font color. */
@@ -476,7 +482,7 @@ public class QuantumCircuitService {
 	private void setCNOTTargetDot(final int wire, final int position, final Drawing graphicsContext) {
 		/*
 		 * graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1) - 4, (wire + 1) *
-		 * wireSpacing + GATE_HEIGHT / 3, "⊕", "50px Arial");
+		 * wireSpacing + GATE_HEIGHT / 3, "âŠ•", "50px Arial");
 		 */
 
 		graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
@@ -527,7 +533,7 @@ public class QuantumCircuitService {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setEmptyGate(final int wire, final int position, final Drawing graphicsContext) {
-		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * getWireSpacing(), " ☐", FONT);
+		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * getWireSpacing(), " â˜�", FONT);
 	}
 
 	/**
