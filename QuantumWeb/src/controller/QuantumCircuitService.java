@@ -11,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
-import javax.faces.annotation.FacesConfig;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -29,7 +28,7 @@ import net.bootsfaces.component.canvas.Drawing;
 
 @Named
 @SessionScoped
-public class QuantumCircuitService implements Serializable  {
+public class QuantumCircuitService implements Serializable {
 	/**
 	 * 
 	 */
@@ -482,7 +481,7 @@ public class QuantumCircuitService implements Serializable  {
 	private void setCNOTTargetDot(final int wire, final int position, final Drawing graphicsContext) {
 		/*
 		 * graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1) - 4, (wire + 1) *
-		 * wireSpacing + GATE_HEIGHT / 3, "âŠ•", "50px Arial");
+		 * wireSpacing + GATE_HEIGHT / 3, "⊕", "50px Arial");
 		 */
 
 		graphicsContext.circle(WIRE_SEGMENT_WIDTH * (position + 1) + 3 * GATE_HEIGHT / 4,
@@ -533,7 +532,7 @@ public class QuantumCircuitService implements Serializable  {
 	 * @param graphicsContext The graphics context on which to draw the object.
 	 */
 	private void setEmptyGate(final int wire, final int position, final Drawing graphicsContext) {
-		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * getWireSpacing(), " â˜�", FONT);
+		graphicsContext.text(WIRE_SEGMENT_WIDTH * (position + 1), (wire + 1) * getWireSpacing(), " ☐", FONT);
 	}
 
 	/**

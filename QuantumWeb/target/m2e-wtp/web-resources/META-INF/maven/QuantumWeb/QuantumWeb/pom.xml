@@ -26,29 +26,20 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>2.0.SP1</version>
-			<scope>provided</scope>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet-shaded</artifactId>
+			<version>3.1.5.Final</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.myfaces.core/myfaces-impl -->
-		<dependency>
-			<groupId>org.apache.myfaces.core</groupId>
-			<artifactId>myfaces-impl</artifactId>
-			<version>2.3.7</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.myfaces.core/myfaces-api -->
 		<dependency>
 			<groupId>org.apache.myfaces.core</groupId>
 			<artifactId>myfaces-api</artifactId>
-			<version>2.3.7</version>
+			<version>2.3-next-M4</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-impl</artifactId>
+			<version>2.3-next-M4</version>
 		</dependency>
 		<dependency>
 			<groupId>net.bootsfaces</groupId>
