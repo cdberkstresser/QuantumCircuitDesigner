@@ -2,17 +2,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:b="http://bootsfaces.net/ui"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	  xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:b="http://bootsfaces.net/ui"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+>
 <h:head>
 	<link rel="shortcut icon" href="#{request.contextPath}/images/icon.svg"
-		type="image/svg+xml"></link>
+		  type="image/svg+xml"/>
 	<title>Quantum Circuit Designer</title>
-	<script src="js/jquery-3.4.1.js"></script>
-	<script src="js/datatables.min.js"></script>
+	<script src="js/jquery-3.4.1.js" type="application/javascript"></script>
+	<script src="js/datatables.min.js" type="application/javascript"></script>
 </h:head>
 <h:body>
 	<h:form enctype="multipart/form-data">
@@ -21,15 +21,15 @@
 			<b:navbarLinks>
 				<b:dropMenu value="Circuit" style="text-shadow:none;">
 					<b:navCommandLink value="New"
-						action="#{quantumCircuitService.clear()}"></b:navCommandLink>
-					<b:navLink></b:navLink>
+						action="#{quantumCircuitService.clear()}" />
+					<b:navLink />
 					<b:navLink value="Open" href="#">
 						<h:inputFile value="#{quantumCircuitService.file}">
 							<f:ajax listener="#{quantumCircuitService.open()}" />
 						</h:inputFile>
 					</b:navLink>
 					<b:navCommandLink value="Save"
-						action="#{quantumCircuitService.getCircuitAsFile()}"></b:navCommandLink>
+						action="#{quantumCircuitService.getCircuitAsFile()}" />
 				</b:dropMenu>
 				<b:dropMenu value="Samples" style="text-shadow:none;">
 					<b:navCommandLink value="Plus State (|+)>"
@@ -86,37 +86,37 @@
 				</b:dropMenu>
 				<b:dropMenu value="Qubits">
 					<b:navCommandLink value="1"
-						action="#{quantumCircuitService.setNumberOfQubits(1)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(1)}" />
 					<b:navCommandLink value="2"
-						action="#{quantumCircuitService.setNumberOfQubits(2)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(2)}" />
 					<b:navCommandLink value="3"
-						action="#{quantumCircuitService.setNumberOfQubits(3)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(3)}" />
 					<b:navCommandLink value="4"
-						action="#{quantumCircuitService.setNumberOfQubits(4)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(4)}" />
 					<b:navCommandLink value="5"
-						action="#{quantumCircuitService.setNumberOfQubits(5)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(5)}" />
 					<b:navCommandLink value="6"
-						action="#{quantumCircuitService.setNumberOfQubits(6)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(6)}" />
 					<b:navCommandLink value="7"
-						action="#{quantumCircuitService.setNumberOfQubits(7)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(7)}" />
 					<b:navCommandLink value="8"
-						action="#{quantumCircuitService.setNumberOfQubits(8)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(8)}" />
 					<b:navCommandLink value="9"
-						action="#{quantumCircuitService.setNumberOfQubits(9)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(9)}" />
 					<b:navCommandLink value="10"
-						action="#{quantumCircuitService.setNumberOfQubits(10)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(10)}" />
 					<b:navCommandLink value="11"
-						action="#{quantumCircuitService.setNumberOfQubits(11)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(11)}" />
 					<b:navCommandLink value="12"
-						action="#{quantumCircuitService.setNumberOfQubits(12)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(12)}" />
 					<b:navCommandLink value="13"
-						action="#{quantumCircuitService.setNumberOfQubits(13)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(13)}" />
 					<b:navCommandLink value="14"
-						action="#{quantumCircuitService.setNumberOfQubits(14)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(14)}" />
 					<b:navCommandLink value="15"
-						action="#{quantumCircuitService.setNumberOfQubits(15)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(15)}" />
 					<b:navCommandLink value="16"
-						action="#{quantumCircuitService.setNumberOfQubits(16)}"></b:navCommandLink>
+						action="#{quantumCircuitService.setNumberOfQubits(16)}" />
 				</b:dropMenu>
 			</b:navbarLinks>
 			<b:navbarLinks pull="right">
@@ -236,7 +236,7 @@
 			</b:navbarLinks>
 			<b:navbarLinks pull="right">
 				<b:navCommandLink value="Clear All Gates"
-					action="#{quantumCircuitService.clearGates()}"></b:navCommandLink>
+					action="#{quantumCircuitService.clearGates()}" />
 			</b:navbarLinks>
 		</b:navBar>
 		<div style="min-width: 800px;">
@@ -319,7 +319,7 @@
 					<b:navBar brand="State Analysis" brandHref="#" fluid="true">
 						<b:navbarLinks>
 							<b:navCommandLink value="Download State Table"
-								action="#{quantumCircuitService.getStateAsFile()}"></b:navCommandLink>
+								action="#{quantumCircuitService.getStateAsFile()}" />
 						</b:navbarLinks>
 					</b:navBar>
 				</c:when>

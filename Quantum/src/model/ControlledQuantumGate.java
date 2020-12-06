@@ -15,17 +15,17 @@ public class ControlledQuantumGate implements QuantumGate {
 	/** Serializable ID. */
 	private static final long serialVersionUID = 746505294177134097L;
 	/** List of gates supported by this class. */
-	private static List<String> gateTypes = new ArrayList<>(
+	private static final List<String> gateTypes = new ArrayList<>(
 			Arrays.asList("CNOT", "C0NOT", "CCNOT", "CC00NOT", "CH", "C0H", "CCH", "CC00H", "CCCNOT", "CCC000NOT"));
 	/** The gate type as a string. Should be filtered through the list above. */
-	private String gateType;
+	private final String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
-	private int gatePosition;
+	private final int gatePosition;
 	/**
 	 * The wires involved in this gate. The last is the target wire. The others are
 	 * controls.
 	 */
-	private List<Integer> wires;
+	private final List<Integer> wires;
 
 	/**
 	 * Constructor.

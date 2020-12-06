@@ -69,13 +69,8 @@ public final class Qubit implements Serializable {
 			return false;
 		}
 		if (y == null) {
-			if (other.y != null) {
-				return false;
-			}
-		} else if (!y.equals(other.y)) {
-			return false;
-		}
-		return true;
+			return other.y == null;
+		} else return y.equals(other.y);
 	}
 
 	/**

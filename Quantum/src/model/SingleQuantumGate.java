@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class SingleQuantumGate implements QuantumGate {
 	/** List of gates supported by this class. */
-	private static Map<String, Complex[][]> gates = new HashMap<>();
+	private static final Map<String, Complex[][]> gates = new HashMap<>();
 	static {
 		gates.put("I", new Complex[][] { { new Complex(1), new Complex(0) }, { new Complex(0), new Complex(1) } });
 		gates.put("H", new Complex[][] { { new Complex(1 / Math.sqrt(2)), new Complex(1 / Math.sqrt(2)) },
@@ -31,14 +31,14 @@ public class SingleQuantumGate implements QuantumGate {
 	/** Serializable ID. */
 	private static final long serialVersionUID = -2798838823193813073L;
 	/** The gate type as a string. Should be filtered through the list above. */
-	private String gateType;
+	private final String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
-	private int gatePosition;
+	private final int gatePosition;
 	/**
 	 * The wires involved in this gate. The last is the target wire. The others are
 	 * controls.
 	 */
-	private List<Integer> wires;
+	private final List<Integer> wires;
 
 	/**
 	 * Constructor.

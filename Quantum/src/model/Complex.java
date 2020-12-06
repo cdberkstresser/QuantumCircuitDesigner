@@ -14,9 +14,9 @@ public final class Complex implements Serializable {
 	/** Serializable ID. */
 	private static final long serialVersionUID = 7676764277764311560L;
 	/** The imaginary part of the complex number. */
-	private double imaginary;
+	private final double imaginary;
 	/** The real part of the complex number. */
-	private double real;
+	private final double real;
 
 	/**
 	 * Constructor for a complex number of magnitude zero.
@@ -79,10 +79,7 @@ public final class Complex implements Serializable {
 		if (Double.doubleToLongBits(imaginary) != Double.doubleToLongBits(other.imaginary)) {
 			return false;
 		}
-		if (Double.doubleToLongBits(real) != Double.doubleToLongBits(other.real)) {
-			return false;
-		}
-		return true;
+		return Double.doubleToLongBits(real) == Double.doubleToLongBits(other.real);
 	}
 
 	/**

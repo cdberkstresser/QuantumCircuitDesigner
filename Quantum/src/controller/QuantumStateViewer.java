@@ -16,14 +16,14 @@ public final class QuantumStateViewer {
 	 * Number of qubits of which this class will represent one state. Used for left
 	 * padding the binary representations of qubits with zeros.
 	 */
-	private int numberOfQubits;
+	private final int numberOfQubits;
 	/** The qubit states. For example 5, which will be represented as |101>. */
-	private int qubits;
+	private final int qubits;
 	/**
 	 * List of states at any given time associated with this qubit arrangement. Will
 	 * be cross-tabbed.
 	 */
-	private List<Complex> states;
+	private final List<Complex> states;
 
 	/**
 	 * Constructor.

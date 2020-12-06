@@ -81,15 +81,15 @@ public class QuantumCircuit implements Serializable {
 	}
 
 	/** The list of quantum gates associated with this circuit. */
-	private List<QuantumGate> gates = new ArrayList<>();
+	private final List<QuantumGate> gates = new ArrayList<>();
 
 	/**
 	 * Cache of states for speed.
 	 */
-	private Map<Integer, List<Complex>> stateTransposeCache = new HashMap<>();
+	private final Map<Integer, List<Complex>> stateTransposeCache = new HashMap<>();
 
 	/** The list of quantum wires associated with this circuit. */
-	private List<QuantumWire> wires = new ArrayList<>();
+	private final List<QuantumWire> wires = new ArrayList<>();
 
 	/**
 	 * Adds a wire to the circuit.
@@ -123,9 +123,7 @@ public class QuantumCircuit implements Serializable {
 			int gate2MinWire = gate2.getWires().stream().min(Comparator.naturalOrder()).get();
 			int gate2MaxWire = gate2.getWires().stream().max(Comparator.naturalOrder()).get();
 
-			if (gate1MaxWire >= gate2MinWire && gate2MaxWire >= gate1MinWire) {
-				return true;
-			}
+			return gate1MaxWire >= gate2MinWire && gate2MaxWire >= gate1MinWire;
 		}
 		return false;
 	}
@@ -217,14 +215,14 @@ public class QuantumCircuit implements Serializable {
 	 * @return The initial values of each wire in the circuit.
 	 */
 	public List<Qubit> getInitialValues() {
-		return wires.stream().map(x -> x.getStart()).collect(Collectors.toList());
+		return wires.stream().map(QuantumWire::getStart).collect(Collectors.toList());
 	}
 
 	/**
 	 * @return The last position of the longest wire in the circuit.
 	 */
 	public int getMaxWireGatePosition() {
-		return gates.stream().map(x -> x.getGatePosition()).max(Comparator.naturalOrder()).orElse(-1);
+		return gates.stream().map(QuantumGate::getGatePosition).max(Comparator.naturalOrder()).orElse(-1);
 	}
 
 	/**
@@ -256,16 +254,16 @@ public class QuantumCircuit implements Serializable {
 	 */
 	public Complex[][] getState(final int afterIndex) {
 		Complex[][] gateMatrix = { { new Complex(1) } };
-		if (wires.stream().filter(x -> x.isDirty()).count() > 0) {
+		if (wires.stream().anyMatch(QuantumWire::isDirty)) {
 			stateTransposeCache.clear();
-			wires.forEach(x -> x.resetDirty());
+			wires.forEach(QuantumWire::resetDirty);
 		}
 		if (stateTransposeCache.containsKey(afterIndex)) {
 			return stateFromCache(stateTransposeCache.get(afterIndex));
 		} else {
 			if (afterIndex == 0) { // afterIndex0 refers to the gates themselves
-				for (int n = 0; n < wires.size(); ++n) {
-					gateMatrix = tensor(gateMatrix, wires.get(n).getInitialValue().getState());
+				for (QuantumWire wire : wires) {
+					gateMatrix = tensor(gateMatrix, wire.getInitialValue().getState());
 				}
 			} else { // afterIndex1 refers to gates on gate position zero, etc.
 				for (int n = 0; n < wires.size();) {
@@ -332,7 +330,7 @@ public class QuantumCircuit implements Serializable {
 			List<Integer> wires = new ArrayList<>();
 			NodeList wireList = gate.getElementsByTagName("Wire");
 			for (int w = 0; w < wireList.getLength(); ++w) {
-				wires.add(Integer.parseInt(((Element) wireList.item(w)).getTextContent()));
+				wires.add(Integer.parseInt(wireList.item(w).getTextContent()));
 			}
 			if (SingleQuantumGate.getGateTypes().contains(gateType)) {
 				setGate(new SingleQuantumGate(gateType, position, wires));
@@ -372,13 +370,9 @@ public class QuantumCircuit implements Serializable {
 
 		gates.removeIf(x -> gatesCollide(x, gate));
 
-		try {
-			gate.getGateMatrix();
-			if (!gate.getGateType().equals("I") && gate.getGatePosition() < getMaxWireGatePosition() + 2) {
-				this.gates.add(gate);
-			}
-		} catch (UnsupportedOperationException e) {
-			throw e;
+		gate.getGateMatrix();
+		if (!gate.getGateType().equals("I") && gate.getGatePosition() < getMaxWireGatePosition() + 2) {
+			this.gates.add(gate);
 		}
 
 	}
@@ -419,8 +413,8 @@ public class QuantumCircuit implements Serializable {
 	 */
 	private List<Complex> stateToCache(final Complex[][] state) {
 		List<Complex> returnValue = new ArrayList<>(state.length);
-		for (int n = 0; n < state.length; ++n) {
-			returnValue.add(state[n][0]);
+		for (Complex[] complexes : state) {
+			returnValue.add(complexes[0]);
 		}
 		return returnValue;
 	}

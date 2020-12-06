@@ -25,7 +25,8 @@ public class QuantumWire implements Serializable {
 	/**
 	 * Constructor.
 	 * 
-	 * @param initialValue The initial value of the qubit.
+	 * @param x The initial x value of the qubit.
+	 * @param y The initial y value of the qubit.
 	 */
 	public QuantumWire(final Complex x, final Complex y) {
 		start = new Qubit(x, y);

@@ -5,10 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
@@ -67,7 +64,7 @@ public class QuantumCircuitService implements Serializable {
 	 */
 	private QuantumCircuit qc = new QuantumCircuit();
 	/** a list of pending wires for controlled qubits. */
-	private List<Integer> wires = new ArrayList<>();
+	private final List<Integer> wires = new ArrayList<>();
 	/** a pending position for the qubit controls. */
 	private int position;
 	/** A running error message for output to the user. */
@@ -218,7 +215,7 @@ public class QuantumCircuitService implements Serializable {
 
 	/**
 	 * This is a bit of a hack to set the fill style color to match the theme.
-	 * 
+	 *
 	 * @param string The fill style color to set the style to.
 	 * @param canvas The graphics context on which to draw the object.
 	 */
@@ -299,16 +296,16 @@ public class QuantumCircuitService implements Serializable {
 		int x = (int) (rawX * WIDTH / width);
 		int y = (int) (rawY * WIDTH / width);
 		if ((x + 5) % WIRE_SEGMENT_WIDTH <= 2 * GATE_HEIGHT && (y + 34) % getWireSpacing() <= 2 * GATE_HEIGHT) {
-			int gatePosition = (int) ((x + 5) / WIRE_SEGMENT_WIDTH) - 1;
-			int wire = (int) ((y + 34) / getWireSpacing() - 1);
+			int gatePosition = ((x + 5) / WIRE_SEGMENT_WIDTH) - 1;
+			int wire = (y + 34) / getWireSpacing() - 1;
 			if (gatePosition == -1) { // clicked on a qubit
 				qc.getWires().get(wire).xStart();
 			} else {
 				if (SingleQuantumGate.getGateTypes().contains(gateType)) {
-					qc.setGate(new SingleQuantumGate(gateType, gatePosition, Arrays.asList(wire)));
+					qc.setGate(new SingleQuantumGate(gateType, gatePosition, Collections.singletonList(wire)));
 				} else if (SingleQuantumGateWithParameter.getGateTypes().contains(gateType)) {
 					qc.setGate(new SingleQuantumGateWithParameter(gateType, parameterValue, gatePosition,
-							Arrays.asList(wire)));
+							Collections.singletonList(wire)));
 				} else if (ControlledQuantumGate.getGateTypes().contains(gateType)) {
 					try {
 						wires.add(wire);
@@ -358,7 +355,7 @@ public class QuantumCircuitService implements Serializable {
 	 * @return The wirespacing between qubits.
 	 */
 	private int getWireSpacing() {
-		return (int) (HEIGHT / (qc.getWires().size() + 1));
+		return HEIGHT / (qc.getWires().size() + 1);
 	}
 
 	/**
@@ -371,12 +368,12 @@ public class QuantumCircuitService implements Serializable {
 		switch (circuitType) {
 		case "Plus State":
 			setNumberOfQubits(1);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			break;
 		case "Minus State":
 			setNumberOfQubits(1);
 			qc.getWires().get(0).xStart();
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			break;
 		case "SWAP":
 			setNumberOfQubits(2);
@@ -387,79 +384,79 @@ public class QuantumCircuitService implements Serializable {
 			break;
 		case "Bell State 0":
 			setNumberOfQubits(2);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
 			break;
 		case "Bell State 1":
 			setNumberOfQubits(2);
 			qc.getWires().get(0).xStart();
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
 			break;
 		case "Bell State 2":
 			setNumberOfQubits(2);
 			qc.getWires().get(1).xStart();
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
 			break;
 		case "Bell State 3":
 			setNumberOfQubits(2);
 			qc.getWires().get(0).xStart();
 			qc.getWires().get(1).xStart();
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			qc.setGate(new ControlledQuantumGate("CNOT", 1, Arrays.asList(0, 1)));
 			break;
 		case "GHZ State 3":
 			setNumberOfQubits(3);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			for (int position = 1; position < qc.getWires().size(); ++position) {
 				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "GHZ State 4":
 			setNumberOfQubits(4);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			for (int position = 1; position < qc.getWires().size(); ++position) {
 				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "GHZ State 5":
 			setNumberOfQubits(5);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			for (int position = 1; position < qc.getWires().size(); ++position) {
 				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "GHZ State 6":
 			setNumberOfQubits(6);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			for (int position = 1; position < qc.getWires().size(); ++position) {
 				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "GHZ State 7":
 			setNumberOfQubits(7);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			for (int position = 1; position < qc.getWires().size(); ++position) {
 				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "GHZ State 8":
 			setNumberOfQubits(8);
-			qc.setGate(new SingleQuantumGate("H", 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGate("H", 0, Collections.singletonList(0)));
 			for (int position = 1; position < qc.getWires().size(); ++position) {
 				qc.setGate(new ControlledQuantumGate("CNOT", position, Arrays.asList(0, position)));
 			}
 			break;
 		case "W State 3":
 			setNumberOfQubits(3);
-			qc.setGate(new SingleQuantumGateWithParameter("Ry", 1.23096, 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGateWithParameter("Ry", 1.23096, 0, Collections.singletonList(0)));
 			qc.setGate(new ControlledQuantumGate("C0H", 1, Arrays.asList(0, 1)));
 			qc.setGate(new ControlledQuantumGate("CC00NOT", 2, Arrays.asList(0, 1, 2)));
 			break;
 		case "W State 4":
 			setNumberOfQubits(4);
-			qc.setGate(new SingleQuantumGateWithParameter("Ry", 1.04712, 0, Arrays.asList(0)));
+			qc.setGate(new SingleQuantumGateWithParameter("Ry", 1.04712, 0, Collections.singletonList(0)));
 			qc.setGate(new ControlledQuantumGateWithParameter("C0Ry", 1.23096, 1, Arrays.asList(0, 1)));
 			qc.setGate(new ControlledQuantumGate("CC00H", 2, Arrays.asList(0, 1, 2)));
 			qc.setGate(new ControlledQuantumGate("CCC000NOT", 3, Arrays.asList(0, 1, 2, 3)));

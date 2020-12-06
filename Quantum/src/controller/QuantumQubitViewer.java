@@ -16,9 +16,9 @@ public final class QuantumQubitViewer {
 	 * The qubit number on which we are measuring the probability of collapsing to
 	 * one.
 	 */
-	private int qubit;
+	private final int qubit;
 	/** An arraylist of probabilities associated with each state . */
-	private List<Complex> states;
+	private final List<Complex> states;
 
 	/**
 	 * Constructor.

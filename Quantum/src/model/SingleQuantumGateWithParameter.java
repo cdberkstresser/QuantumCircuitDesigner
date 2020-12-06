@@ -15,20 +15,20 @@ public class SingleQuantumGateWithParameter implements QuantumGateWithParameter 
 	/** Serializable ID. */
 	private static final long serialVersionUID = -7753721998037365439L;
 	/** List of gates supported by this class. */
-	private static List<String> gateTypes = new ArrayList<>(Arrays.asList("Rx", "Ry", "Rz"));
+	private static final List<String> gateTypes = new ArrayList<>(Arrays.asList("Rx", "Ry", "Rz"));
 	/** The gate type as a string. Should be filtered through the list above. */
-	private String gateType;
+	private final String gateType;
 	/** The horizontal position of this gate on the circuit. Zero based. */
-	private int gatePosition;
+	private final int gatePosition;
 	/**
 	 * The wires involved in this gate. The last is the target wire. The others are
 	 * controls.
 	 */
-	private List<Integer> wires;
+	private final List<Integer> wires;
 	/**
 	 * The value associated with this quantum gate.
 	 */
-	private double value;
+	private final double value;
 
 	/**
 	 * Constructor.
