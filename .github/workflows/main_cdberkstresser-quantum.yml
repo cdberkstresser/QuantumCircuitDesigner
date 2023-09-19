@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'cdberkstresser-quantum'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_665DF3C06464493F8FE9C7A5EF4C6505 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_09CCED08F27143AEB0B6D286552FDA6A }}
           package: '*.war'
